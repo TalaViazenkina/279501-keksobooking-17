@@ -42,7 +42,12 @@ var getRandomNumber = function (min, max) {
 };
 
 // DOM-объекты
-var map = document.querySelector('.map');
+var map = document.querySelector('.map'); // карта
+map.classList.remove('map--faded');
+
+var mapPinTemplate = document.querySelector('#pin')
+  .content
+  .querySelector('button');
 
 // исходные денные для генерации объявлений
 // тип недвижимости
@@ -78,3 +83,14 @@ var randomAdsList = [];
 for (var i = 0; i < ADS_NUMBER; i++) {
   randomAdsList.push(generateAd(avatarNumbers[i]));
 }
+
+// используя шаблон создадим новый DOM-эелемент для метки для нового объявления
+var getNewPin = function (obj) {
+  var newPin = mapPinTemplate.cloneNode(true);
+  newPin.style.left = obj.location.x + 'px';
+  newPin.style.top = obj.location.y + 'px';
+  newPin.src = obj.author.avatar;
+  newPin.alt = 'Заголовок объявления';
+
+  return newPin;
+};
