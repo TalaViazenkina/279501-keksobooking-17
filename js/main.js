@@ -3,6 +3,7 @@
 // константы
 var ADS_NUMBER = 8; // количество объявлений, которые необходимо сгенерировать
 
+
 // общие функции, необходимые для расчетов
 // создание числового массива заданной длины
 var getArrayOfNumbers = function (arrayLength) {
@@ -41,6 +42,7 @@ var getRandomNumber = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
 };
 
+
 // DOM-объекты
 var map = document.querySelector('.map'); // карта
 map.classList.remove('map--faded');
@@ -48,6 +50,9 @@ map.classList.remove('map--faded');
 var mapPinTemplate = document.querySelector('#pin')
   .content
   .querySelector('button');
+
+var mapPinList = document.querySelector('.map__pins');
+
 
 // исходные денные для генерации объявлений
 // тип недвижимости
@@ -78,6 +83,7 @@ var generateAd = function (numericalItem) {
   };
 };
 
+
 // создадим массив из заданного числа случайных объявлений
 var randomAdsList = [];
 for (var i = 0; i < ADS_NUMBER; i++) {
@@ -94,3 +100,16 @@ var getNewPin = function (obj) {
 
   return newPin;
 };
+
+// создадим необходимое количество меток для объявлений и добавим их в разметку
+var getNewPinList = function () {
+  var fragment = document.createDocumentFragment();
+  for (var j = 0; j < ADS_NUMBER; j++) {
+    fragment.appendChild(getNewPin(randomAdsList[j]));
+  }
+
+  return mapPinList.appendChild(fragment);
+  console.log(fragment);
+};
+
+getNewPinList();
