@@ -47,12 +47,19 @@ var getRandomNumber = function (min, max) {
 var map = document.querySelector('.map'); // карта
 map.classList.remove('map--faded');
 
-var mapPinTemplate = document.querySelector('#pin')
+var mapPinList = map.querySelector('.map__pins'); // блок с метками
+
+var mapPinTemplate = document.querySelector('#pin') // шаблон метки
   .content
   .querySelector('button');
 
-var mapPinList = document.querySelector('.map__pins');
-
+// т.к. для расчета координат нам понадобяться размеры пина, добавим временный пин в разметку
+var tempPin = mapPinTemplate.cloneNode(true);
+tempPin.style.visibility = 'hidden'; // сделаем его невидимым
+mapPinList.appendChild(tempPin); // добавим в разметку
+var pinWidth = tempPin.offsetWidth; // сохраним размеры
+var pinHeight = tempPin.offsetHeight; // сохраним размеры
+mapPinList.removeChild(tempPin); // удалим из разметки
 
 // исходные денные для генерации объявлений
 // тип недвижимости
@@ -62,7 +69,7 @@ var offerTypes = ['palace', 'flat', 'house', 'bungalo'];
 var locationY = {min: 130, max: 630};
 
 // координата X метки на карте, диапазон
-var locationX = {min: 0, max: map.offsetWidth};
+var locationX = {min: 0 + pinWidth / 2, max: map.offsetWidth - pinWidth / 2};
 
 // массив чисел для генерации адреса аватара
 var avatarNumbers = getMixedArray(getArrayOfNumbers(ADS_NUMBER));
@@ -93,8 +100,8 @@ for (var i = 0; i < ADS_NUMBER; i++) {
 // используя шаблон создадим новый DOM-элемент для метки для нового объявления
 var getNewPin = function (obj) {
   var newPin = mapPinTemplate.cloneNode(true);
-  newPin.style.left = obj.location.x + 'px';
-  newPin.style.top = obj.location.y + 'px';
+  newPin.style.left = obj.location.x - pinWidth / 2 + 'px';
+  newPin.style.top = obj.location.y - pinHeight + 'px';
 
   var newPinImg = newPin.querySelector('img'); // аватар на метке
   newPinImg.src = obj.author.avatar;
