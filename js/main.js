@@ -56,3 +56,25 @@ var locationX = {min: 0, max: map.offsetWidth};
 
 // массив чисел для генерации адреса аватара
 var avatarNumbers = getMixedArray(getArrayOfNumbers(ADS_NUMBER));
+
+// создадим случайное объявление
+var generateAd = function (numericalItem) {
+  return {
+    'author': {
+      'avatar': 'img/avatars/user0' + numericalItem + '.png'
+    },
+    'offer': {
+      'type': getRandomArrayItem(offerTypes)
+    },
+    'location': {
+      'x': getRandomNumber(locationX.min, locationX.max),
+      'y': getRandomNumber(locationY.min, locationY.max)
+    }
+  };
+};
+
+// создадим массив из заданного числа случайных объявлений
+var randomAdsList = [];
+for (var i = 0; i < ADS_NUMBER; i++) {
+  randomAdsList.push(generateAd(avatarNumbers[i]));
+}
