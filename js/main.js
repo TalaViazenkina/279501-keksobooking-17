@@ -90,13 +90,15 @@ for (var i = 0; i < ADS_NUMBER; i++) {
   randomAdsList.push(generateAd(avatarNumbers[i]));
 }
 
-// используя шаблон создадим новый DOM-эелемент для метки для нового объявления
+// используя шаблон создадим новый DOM-элемент для метки для нового объявления
 var getNewPin = function (obj) {
   var newPin = mapPinTemplate.cloneNode(true);
   newPin.style.left = obj.location.x + 'px';
   newPin.style.top = obj.location.y + 'px';
-  newPin.src = obj.author.avatar;
-  newPin.alt = 'Заголовок объявления';
+
+  var newPinImg = newPin.querySelector('img'); // аватар на метке
+  newPinImg.src = obj.author.avatar;
+  newPinImg.alt = 'Заголовок объявления';
 
   return newPin;
 };
@@ -109,7 +111,6 @@ var getNewPinList = function () {
   }
 
   return mapPinList.appendChild(fragment);
-  console.log(fragment);
 };
 
 getNewPinList();
