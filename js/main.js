@@ -1,37 +1,41 @@
 'use strict';
 
-// константы
-var ADS_NUMBER = 8; // количество объявлений, которые необходимо сгенерировать
+// DOM-объекты
+var map = document.querySelector('.map'); // карта
+map.classList.remove('map--faded');
+
+var mapPinList = map.querySelector('.map__pins'); // блок с метками
+
+var mapPinTemplate = document.querySelector('#pin') // шаблон метки
+  .content
+  .querySelector('button');
+
+
+// количество объявлений, которые необходимо сгенерировать
+var ADS_NUMBER = 8;
+
+// размеры пина из CSS
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
+
+// исходные денные для генерации объявлений
+// тип недвижимости
+var OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
+
+// координата Y метки на карте, диапазон
+var locationY = {
+  MIN: 130,
+  MAX: 630
+};
+
+// координата X метки на карте, диапазон
+var locationX = {
+  min: 0 + PIN_WIDTH / 2,
+  max: map.offsetWidth - PIN_WIDTH / 2
+};
 
 
 // общие функции, необходимые для расчетов
-// создание числового массива заданной длины
-var getArrayOfNumbers = function (arrayLength) {
-  var arrayOfNumbers = [];
-  for (var i = 1; i <= arrayLength; i++) {
-    arrayOfNumbers.push(i);
-  }
-
-  return arrayOfNumbers;
-};
-
-// перемешивание массива
-var getMixedArray = function (arr) {
-  for (var i = arr.length - 1; i > 0; i--) {
-    // получаем индекс случайного элемента в массиве с длинной (i + 1),
-    // на первой итерации длина массива равна длине исходного,
-    // с каждой последующей - на единицу меньше
-    var randomIndex = Math.floor(Math.random() * (i + 1));
-
-    // меняем элементы местами
-    var temp = arr[i];
-    arr[i] = arr[randomIndex]; // случайно выбранный элемент перенесен в конец массива
-    arr[randomIndex] = temp; // на место случайно выбранного элемента записан элемент с индексом i
-  }
-
-  return arr;
-};
-
 // генерирование случайного элемента массива
 var getRandomArrayItem = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -43,37 +47,6 @@ var getRandomNumber = function (min, max) {
 };
 
 
-// DOM-объекты
-var map = document.querySelector('.map'); // карта
-map.classList.remove('map--faded');
-
-var mapPinList = map.querySelector('.map__pins'); // блок с метками
-
-var mapPinTemplate = document.querySelector('#pin') // шаблон метки
-  .content
-  .querySelector('button');
-
-// т.к. для расчета координат нам понадобяться размеры пина, добавим временный пин в разметку
-var tempPin = mapPinTemplate.cloneNode(true);
-tempPin.style.visibility = 'hidden'; // сделаем его невидимым
-mapPinList.appendChild(tempPin); // добавим в разметку
-var pinWidth = tempPin.offsetWidth; // сохраним размеры
-var pinHeight = tempPin.offsetHeight; // сохраним размеры
-mapPinList.removeChild(tempPin); // удалим из разметки
-
-// исходные денные для генерации объявлений
-// тип недвижимости
-var offerTypes = ['palace', 'flat', 'house', 'bungalo'];
-
-// координата Y метки на карте, диапазон
-var locationY = {min: 130, max: 630};
-
-// координата X метки на карте, диапазон
-var locationX = {min: 0 + pinWidth / 2, max: map.offsetWidth - pinWidth / 2};
-
-// массив чисел для генерации адреса аватара
-var avatarNumbers = getMixedArray(getArrayOfNumbers(ADS_NUMBER));
-
 // создадим случайное объявление
 var generateAd = function (numericalItem) {
   return {
@@ -81,11 +54,11 @@ var generateAd = function (numericalItem) {
       'avatar': 'img/avatars/user0' + numericalItem + '.png'
     },
     'offer': {
-      'type': getRandomArrayItem(offerTypes)
+      'type': getRandomArrayItem(OFFER_TYPES)
     },
     'location': {
       'x': getRandomNumber(locationX.min, locationX.max),
-      'y': getRandomNumber(locationY.min, locationY.max)
+      'y': getRandomNumber(locationY.MIN, locationY.MAX)
     }
   };
 };
@@ -94,14 +67,14 @@ var generateAd = function (numericalItem) {
 // создадим массив из заданного числа случайных объявлений
 var randomAdsList = [];
 for (var i = 0; i < ADS_NUMBER; i++) {
-  randomAdsList.push(generateAd(avatarNumbers[i]));
+  randomAdsList.push(generateAd(i + 1));
 }
 
 // используя шаблон создадим новый DOM-элемент для метки для нового объявления
 var getNewPin = function (obj) {
   var newPin = mapPinTemplate.cloneNode(true);
-  newPin.style.left = obj.location.x - pinWidth / 2 + 'px';
-  newPin.style.top = obj.location.y - pinHeight + 'px';
+  newPin.style.left = obj.location.x - PIN_WIDTH / 2 + 'px';
+  newPin.style.top = obj.location.y - PIN_HEIGHT + 'px';
 
   var newPinImg = newPin.querySelector('img'); // аватар на метке
   newPinImg.src = obj.author.avatar;
