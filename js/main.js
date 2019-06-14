@@ -55,7 +55,7 @@ var LocationX = {
 /**
 * генерируем случайный элемент массива
 * @param {array} arr
-* @return {(number|string|boolean|Array|Object)} Возвращает случайный элемент массива
+* @return {(number|string|boolean|Array|Object)}
 */
 var getRandomArrayItem = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -63,9 +63,9 @@ var getRandomArrayItem = function (arr) {
 
 /**
 * генерируем случайное число из диапазона
-* @param {number} min минимальное значение
-* @param {number} max максимальное значение
-* @return {number} Возвращает случайный элемент массива
+* @param {number} min
+* @param {number} max
+* @return {number}
 */
 var getRandomNumber = function (min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
