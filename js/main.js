@@ -1,25 +1,7 @@
 'use strict';
 
-// DOM-объекты
-var map = document.querySelector('.map'); // карта
-
-
-var mapPinList = map.querySelector('.map__pins'); // блок с метками
-
-var mapPinTemplate = document.querySelector('#pin') // шаблон метки
-  .content
-  .querySelector('button');
-
-// форма фильтрации объявлений
-var mapFilters = map.querySelector('.map__filters');
-var mapFiltersSelectsList = mapFilters.querySelectorAll('.map__filter'); // все селекты в форме фильтрации
-var mapFiltersFieldset = mapFilters.querySelector('.map__features'); // филдсет в форме фильтрации
-
-// форма добавления объявлений
-var adForm = document.querySelector('.ad-form');
-var adFormFieldsetsList = adForm.querySelectorAll('fieldset');
-
-var mainPin = map.querySelector('.map__pin--main'); // главная метка
+// константы
+var MAP = document.querySelector('.map'); // карта
 
 /**
 * количество объявлений, которые необходимо сгенерировать
@@ -35,7 +17,6 @@ var ADS_NUMBER = 8;
 */
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
-
 
 /**
 * тип недвижимости
@@ -58,12 +39,31 @@ var LocationY = {
 */
 var LocationX = {
   MIN: 0 + PIN_WIDTH / 2,
-  MAX: map.offsetWidth - PIN_WIDTH / 2
+  MAX: MAP.offsetWidth - PIN_WIDTH / 2
 };
 
 
+// DOM-объекты
+var mapPinList = MAP.querySelector('.map__pins'); // блок с метками
+
+var mapPinTemplate = document.querySelector('#pin') // шаблон метки
+  .content
+  .querySelector('button');
+
+// форма фильтрации объявлений
+var mapFilters = MAP.querySelector('.map__filters');
+var mapFiltersSelectsList = mapFilters.querySelectorAll('.map__filter'); // все селекты в форме фильтрации
+var mapFiltersFieldset = mapFilters.querySelector('.map__features'); // филдсет в форме фильтрации
+
+// форма добавления объявлений
+var adForm = document.querySelector('.ad-form');
+var adFormFieldsetsList = adForm.querySelectorAll('fieldset');
+
+var mainPin = MAP.querySelector('.map__pin--main'); // главная метка
+
+
 /**
-* генерируем случайный элемент массива
+* генерирует случайный элемент массива
 * @param {array} arr
 * @return {(number|string|boolean|Array|Object)}
 */
@@ -72,7 +72,7 @@ var getRandomArrayItem = function (arr) {
 };
 
 /**
-* генерируем случайное число из диапазона
+* генерирует случайное число из диапазона
 * @param {number} min
 * @param {number} max
 * @return {number}
@@ -170,7 +170,7 @@ for (i = 0; i < adFormFieldsetsList.length; i++) {
 
 // активация страницы
 mainPin.addEventListener('click', function () {
-  map.classList.remove('map--faded');
+  MAP.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
 
   // удаляем со всех элементов управления формой атрибут disabled
