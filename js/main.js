@@ -2,7 +2,7 @@
 
 // DOM-объекты
 var map = document.querySelector('.map'); // карта
-map.classList.remove('map--faded');
+//map.classList.remove('map--faded');
 
 var mapPinList = map.querySelector('.map__pins'); // блок с метками
 
@@ -10,6 +10,14 @@ var mapPinTemplate = document.querySelector('#pin') // шаблон метки
   .content
   .querySelector('button');
 
+// форма фильтрации объявлений
+var mapFilters = map.querySelector('.map__filters');
+var mapFiltersSelectsList = mapFilters.querySelectorAll('.map__filter'); // все селекты в форме фильтрации
+var mapFiltersFieldset = mapFilters.querySelector('.map__features'); // филдсет в форме фильтрации
+
+// форма добавления объявлений
+var adForm = document.querySelector('.ad-form');
+var adFormFieldsetsList = adForm.querySelectorAll('fieldset');
 
 /**
 * количество объявлений, которые необходимо сгенерировать
@@ -128,4 +136,23 @@ var getNewPinList = function () {
   return mapPinList.appendChild(fragment);
 };
 
-getNewPinList();
+//getNewPinList();
+
+/**
+* добавляет DOM-элементу аттрибут disabled
+* @param {Element} el
+*/
+var addDisabled = function (el) {
+  el.setAttribute('disabled', 'disabled');
+};
+
+// в исходном состоянии все элементы управления формой должны быть неактивны
+addDisabled(mapFiltersFieldset);
+
+for (i = 0; i < mapFiltersSelectsList.length; i++) {
+  addDisabled(mapFiltersSelectsList[i]);
+}
+
+for (i = 0; i < adFormFieldsetsList.length; i++) {
+  addDisabled(adFormFieldsetsList[i]);
+}
