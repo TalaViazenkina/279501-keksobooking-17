@@ -2,6 +2,7 @@
 
 // константы
 var MAP = document.querySelector('.map'); // карта
+var MAIN_PIN = MAP.querySelector('.map__pin--main'); // главная метка
 
 /**
 * количество объявлений, которые необходимо сгенерировать
@@ -11,12 +12,36 @@ var MAP = document.querySelector('.map'); // карта
 var ADS_NUMBER = 8;
 
 /**
-* размеры пина из CSS
+* размеры пина для объявления из CSS
 * @const
 * @type {number}
 */
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
+
+/**
+* размеры "главного пина" (изначальной метки) из CSS, состояние "с острым концом"
+* @const
+* @type {number}
+*/
+var MAIN_PIN_WIDTH = 65;
+var MAIN_PIN_HEIGHT = 81; // складывается из диаметра круга плюс высота треугольника-острия минус смещение острия по вертикали
+
+/**
+* диаметр "главного пина" (изначальной метки) из CSS, состояние "круглая метка"
+* @const
+* @type {number}
+*/
+var MAIN_PIN_SIZE = 65;
+
+/**
+* изначальные координаты "главного пина"
+* @const
+* @type {number}
+*/
+var MAIN_PIN_COORDINATE_X = MAIN_PIN.offsetLeft + MAIN_PIN_SIZE / 2;
+var MAIN_PIN_COORDINATE_Y = MAIN_PIN.offsetTop + MAIN_PIN_SIZE / 2;
+
 
 /**
 * тип недвижимости
@@ -58,8 +83,7 @@ var mapFiltersFieldset = mapFilters.querySelector('.map__features'); // филд
 // форма добавления объявлений
 var adForm = document.querySelector('.ad-form');
 var adFormFieldsetsList = adForm.querySelectorAll('fieldset');
-
-var mainPin = MAP.querySelector('.map__pin--main'); // главная метка
+var adFormAddress = adForm.querySelector('#address'); // поля ввода координат адреса
 
 
 /**
@@ -138,7 +162,6 @@ var getNewPinList = function () {
   return mapPinList.appendChild(fragment);
 };
 
-//getNewPinList();
 
 /**
 * добавляет DOM-элементу атрибут disabled
@@ -156,20 +179,24 @@ var removeDisabled = function (el) {
   el.removeAttribute('disabled');
 };
 
-// в исходном состоянии все элементы управления формой должны быть неактивны
-// добавим всем элементам управления формой атрибут disabled
-addDisabled(mapFiltersFieldset);
+/**
+* заполняет поле изначальными координатами метки
+*/
+var enterCoordinateInitial = function () {
+  adFormAddress.value = MAIN_PIN_COORDINATE_X + ', ' + MAIN_PIN_COORDINATE_Y;
+};
 
-for (i = 0; i < mapFiltersSelectsList.length; i++) {
-  addDisabled(mapFiltersSelectsList[i]);
-}
+/**
+* заполняет поле координатами передвинутой метки
+*/
+var enterCoordinate = function () {
+  adFormAddress.value = (MAIN_PIN.offsetLeft + MAIN_PIN_WIDTH / 2) + ', ' + (MAIN_PIN.offsetTop + MAIN_PIN_HEIGHT);
+};
 
-for (i = 0; i < adFormFieldsetsList.length; i++) {
-  addDisabled(adFormFieldsetsList[i]);
-}
-
-// активация страницы
-mainPin.addEventListener('click', function () {
+/**
+* активирует страницу
+*/
+var activatePage = function () {
   MAP.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
 
@@ -183,5 +210,37 @@ mainPin.addEventListener('click', function () {
   for (i = 0; i < adFormFieldsetsList.length; i++) {
     removeDisabled(adFormFieldsetsList[i]);
   }
+};
+
+/**
+* переводит страницу в неактивное состояние
+*/
+var desactivatePage = function () {
+  // добавим всем элементам управления формой атрибут disabled
+  addDisabled(mapFiltersFieldset);
+
+  for (i = 0; i < mapFiltersSelectsList.length; i++) {
+    addDisabled(mapFiltersSelectsList[i]);
+  }
+
+  for (i = 0; i < adFormFieldsetsList.length; i++) {
+    addDisabled(adFormFieldsetsList[i]);
+  }
+  // передадим изначальные координаты метки в поле адреса
+  enterCoordinateInitial();
+};
+
+// дезактивация страницы
+desactivatePage();
+
+// активация страницы
+MAIN_PIN.addEventListener('click', function () {
+  activatePage();
 });
 
+// активация при перетаскивании метки
+MAIN_PIN.addEventListener('mouseup', function () {
+  activatePage();
+  enterCoordinate();
+  getNewPinList();
+});
