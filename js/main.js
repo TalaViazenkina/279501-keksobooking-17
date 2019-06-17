@@ -2,7 +2,7 @@
 
 // DOM-объекты
 var map = document.querySelector('.map'); // карта
-//map.classList.remove('map--faded');
+
 
 var mapPinList = map.querySelector('.map__pins'); // блок с метками
 
@@ -18,6 +18,8 @@ var mapFiltersFieldset = mapFilters.querySelector('.map__features'); // филд
 // форма добавления объявлений
 var adForm = document.querySelector('.ad-form');
 var adFormFieldsetsList = adForm.querySelectorAll('fieldset');
+
+var mainPin = map.querySelector('.map__pin--main'); // главная метка
 
 /**
 * количество объявлений, которые необходимо сгенерировать
@@ -139,14 +141,23 @@ var getNewPinList = function () {
 //getNewPinList();
 
 /**
-* добавляет DOM-элементу аттрибут disabled
+* добавляет DOM-элементу атрибут disabled
 * @param {Element} el
 */
 var addDisabled = function (el) {
   el.setAttribute('disabled', 'disabled');
 };
 
+/**
+* удаляет у DOM-элемента атрибут disabled
+* @param {Element} el
+*/
+var removeDisabled = function (el) {
+  el.removeAttribute('disabled');
+};
+
 // в исходном состоянии все элементы управления формой должны быть неактивны
+// добавим всем элементам управления формой атрибут disabled
 addDisabled(mapFiltersFieldset);
 
 for (i = 0; i < mapFiltersSelectsList.length; i++) {
@@ -156,3 +167,21 @@ for (i = 0; i < mapFiltersSelectsList.length; i++) {
 for (i = 0; i < adFormFieldsetsList.length; i++) {
   addDisabled(adFormFieldsetsList[i]);
 }
+
+// активация страницы
+mainPin.addEventListener('click', function () {
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+
+  // удаляем со всех элементов управления формой атрибут disabled
+  removeDisabled(mapFiltersFieldset);
+
+  for (i = 0; i < mapFiltersSelectsList.length; i++) {
+    removeDisabled(mapFiltersSelectsList[i]);
+  }
+
+  for (i = 0; i < adFormFieldsetsList.length; i++) {
+    removeDisabled(adFormFieldsetsList[i]);
+  }
+});
+
