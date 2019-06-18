@@ -84,7 +84,8 @@ var mapFiltersFieldset = mapFilters.querySelector('.map__features'); // филд
 var adForm = document.querySelector('.ad-form');
 var adFormFieldsetsList = adForm.querySelectorAll('fieldset');
 var adFormAddress = adForm.querySelector('#address'); // поля ввода координат адреса
-
+var adFormType = adForm.querySelector('#type'); // поле выбора типа жилья
+var adFormPrice = adForm.querySelector('#price'); // поле ввода цены за ночь
 
 /**
 * генерирует случайный элемент массива
@@ -230,6 +231,25 @@ var desactivatePage = function () {
   enterCoordinateInitial();
 };
 
+/**
+* устанавливает минимальное значение поля «Цена за ночь»
+*/
+var getPrice = function () {
+  var minPrice = '';
+  if (adFormType.value === 'bungalo') {
+    minPrice = '0';
+  } else if (adFormType.value === 'flat') {
+    minPrice = '1000';
+  } else if (adFormType.value === 'house') {
+    minPrice = '5000';
+  } else {
+    minPrice = '10000';
+  }
+
+  adFormPrice.setAttribute('min', 'minPrice');
+  adFormPrice.placeholder = minPrice;
+};
+
 // дезактивация страницы
 desactivatePage();
 
@@ -242,5 +262,10 @@ MAIN_PIN.addEventListener('click', function () {
 MAIN_PIN.addEventListener('mouseup', function () {
   activatePage();
   enterCoordinate();
+  getPrice();
   getNewPinList();
+});
+
+adFormType.addEventListener('change', function () {
+  getPrice();
 });
