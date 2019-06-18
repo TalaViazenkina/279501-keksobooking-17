@@ -86,6 +86,8 @@ var adFormFieldsetsList = adForm.querySelectorAll('fieldset');
 var adFormAddress = adForm.querySelector('#address'); // поля ввода координат адреса
 var adFormType = adForm.querySelector('#type'); // поле выбора типа жилья
 var adFormPrice = adForm.querySelector('#price'); // поле ввода цены за ночь
+var adFormTimeIn = adForm.querySelector('#timein'); // поле ввода времени заезда
+var adFormTimeOut = adForm.querySelector('#timeout'); // поле ввода времени выезда
 
 /**
 * генерирует случайный элемент массива
@@ -268,4 +270,28 @@ MAIN_PIN.addEventListener('mouseup', function () {
 
 adFormType.addEventListener('change', function () {
   getPrice();
+});
+
+// т.к. по ТЗ поля «Время заезда» и «Время выезда» синхронизированы, создадим функцию, которая синхронизирует два селекта
+/**
+* синхронихирует выбор полей с одинаковым значением в двух списках
+* @param {HTMLSelectElement} select1
+* @param {HTMLSelectElement} select2
+*/
+var getSimilarChoice = function (select1, select2) {
+  var selectedValue = select1.value; // находим и сохраняем в переменную значение выбранного пунтка в списке1
+  for (i = 0; i < select2.options.length; i++) {
+    if (select2.options[i].value === selectedValue) { // во втором списке находим пункт с таким же значением
+      select2.selectedIndex = i; // делаем этот пункт выбранным
+    }
+  }
+};
+
+// синхронизируем изменения в полях «Время заезда» и «Время выезда»
+adFormTimeIn.addEventListener('change', function () {
+  getSimilarChoice(adFormTimeIn, adFormTimeOut);
+});
+
+adFormTimeOut.addEventListener('change', function () {
+  getSimilarChoice(adFormTimeOut, adFormTimeIn);
 });
