@@ -278,12 +278,7 @@ adFormType.addEventListener('change', function () {
 * @param {HTMLSelectElement} select2
 */
 var getSimilarChoice = function (select1, select2) {
-  var selectedValue = select1.value; // находим и сохраняем в переменную значение выбранного пунтка в списке1
-  for (i = 0; i < select2.options.length; i++) {
-    if (select2.options[i].value === selectedValue) { // во втором списке находим пункт с таким же значением
-      select2.selectedIndex = i; // делаем этот пункт выбранным
-    }
-  }
+  select2.value = select1.value; // для списка2 делаем выбранным пункт с тем же значением value, что и выбранный пункт списка1
 };
 
 // синхронизируем изменения в полях «Время заезда» и «Время выезда»
