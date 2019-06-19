@@ -233,23 +233,22 @@ var desactivatePage = function () {
   enterCoordinateInitial();
 };
 
-/**
-* устанавливает минимальное значение поля «Цена за ночь»
-*/
-var getPrice = function () {
-  var minPrice = '';
-  if (adFormType.value === 'bungalo') {
-    minPrice = '0';
-  } else if (adFormType.value === 'flat') {
-    minPrice = '1000';
-  } else if (adFormType.value === 'house') {
-    minPrice = '5000';
-  } else {
-    minPrice = '10000';
-  }
+// создадим объект-мапу для хранения зависимости минимальной стоимости от типа жилья
 
-  adFormPrice.setAttribute('min', 'minPrice');
-  adFormPrice.placeholder = minPrice;
+var typePriceMap = {
+  'bungalo': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000
+};
+
+/**
+* устанавливает минимальное значение поля «Цена за ночь» в зависимости от типа жилья
+* @param {object} objMap
+*/
+var getPrice = function (objMap) {
+  adFormPrice.min = objMap[adFormType.value];
+  adFormPrice.placeholder = objMap[adFormType.value];
 };
 
 // дезактивация страницы
@@ -264,12 +263,12 @@ MAIN_PIN.addEventListener('click', function () {
 MAIN_PIN.addEventListener('mouseup', function () {
   activatePage();
   enterCoordinate();
-  getPrice();
+  getPrice(typePriceMap);
   getNewPinList();
 });
 
 adFormType.addEventListener('change', function () {
-  getPrice();
+  getPrice(typePriceMap);
 });
 
 // т.к. по ТЗ поля «Время заезда» и «Время выезда» синхронизированы, создадим функцию, которая синхронизирует два селекта
