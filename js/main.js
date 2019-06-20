@@ -215,24 +215,6 @@ var activatePage = function () {
   }
 };
 
-/**
-* переводит страницу в неактивное состояние
-*/
-var desactivatePage = function () {
-  // добавим всем элементам управления формой атрибут disabled
-  addDisabled(mapFiltersFieldset);
-
-  for (i = 0; i < mapFiltersSelectsList.length; i++) {
-    addDisabled(mapFiltersSelectsList[i]);
-  }
-
-  for (i = 0; i < adFormFieldsetsList.length; i++) {
-    addDisabled(adFormFieldsetsList[i]);
-  }
-  // передадим изначальные координаты метки в поле адреса
-  enterCoordinateInitial();
-};
-
 // создадим объект-мапу для хранения зависимости минимальной стоимости от типа жилья
 
 var typePriceMap = {
@@ -251,20 +233,89 @@ var getPrice = function (objMap) {
   adFormPrice.placeholder = objMap[adFormType.value];
 };
 
+/**
+* переводит страницу в неактивное состояние
+*/
+var desactivatePage = function () {
+  // добавим всем элементам управления формой атрибут disabled
+  addDisabled(mapFiltersFieldset);
+
+  for (i = 0; i < mapFiltersSelectsList.length; i++) {
+    addDisabled(mapFiltersSelectsList[i]);
+  }
+
+  for (i = 0; i < adFormFieldsetsList.length; i++) {
+    addDisabled(adFormFieldsetsList[i]);
+  }
+
+  // передадим изначальные координаты метки в поле адреса
+  enterCoordinateInitial();
+
+  // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
+  getPrice(typePriceMap);
+};
+
+
 // дезактивация страницы
 desactivatePage();
 
-// активация страницы
-MAIN_PIN.addEventListener('click', function () {
+MAIN_PIN.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
   activatePage();
-});
 
-// активация при перетаскивании метки
-MAIN_PIN.addEventListener('mouseup', function () {
-  activatePage();
-  enterCoordinate();
-  getPrice(typePriceMap);
-  getNewPinList();
+  var dragged = false; // флаг, который будет показывать было ли перемещение мыши
+
+  // определяем координаты курсора в момент нажатия мышки
+  var startCoord = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  /**
+    * обработчик передвижения мышки
+    * @param {MouseEvent} moveEvt
+    */
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    dragged = true;
+
+    // определяем сдвиг курсора относительно предыдущего положения
+    var shift = {
+      x: moveEvt.clientX - startCoord.x,
+      y: moveEvt.clientY - startCoord.y
+    };
+
+    // пересчитываем координаты метки и задаем их в стили
+    MAIN_PIN.style.top = (MAIN_PIN.offsetTop + shift.y) + 'px';
+    MAIN_PIN.style.left = (MAIN_PIN.offsetLeft + shift.x) + 'px';
+
+    // записываем измененные координаты в поле ввода
+    enterCoordinate();
+
+    // записываем в стартовые координаты текущие координаты курсора
+    startCoord = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    if (!dragged) {
+      enterCoordinate(); // пересчитываем координаты метки в случае, если не было перемещения мыши
+    }
+
+    getNewPinList(); // запускаем отрисовку меток похожих объявлений
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+
 });
 
 adFormType.addEventListener('change', function () {
