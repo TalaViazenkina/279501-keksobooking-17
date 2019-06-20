@@ -84,7 +84,10 @@ var mapFiltersFieldset = mapFilters.querySelector('.map__features'); // филд
 var adForm = document.querySelector('.ad-form');
 var adFormFieldsetsList = adForm.querySelectorAll('fieldset');
 var adFormAddress = adForm.querySelector('#address'); // поля ввода координат адреса
-
+var adFormType = adForm.querySelector('#type'); // поле выбора типа жилья
+var adFormPrice = adForm.querySelector('#price'); // поле ввода цены за ночь
+var adFormTimeIn = adForm.querySelector('#timein'); // поле ввода времени заезда
+var adFormTimeOut = adForm.querySelector('#timeout'); // поле ввода времени выезда
 
 /**
 * генерирует случайный элемент массива
@@ -230,6 +233,24 @@ var desactivatePage = function () {
   enterCoordinateInitial();
 };
 
+// создадим объект-мапу для хранения зависимости минимальной стоимости от типа жилья
+
+var typePriceMap = {
+  'bungalo': 0,
+  'flat': 1000,
+  'house': 5000,
+  'palace': 10000
+};
+
+/**
+* устанавливает минимальное значение поля «Цена за ночь» в зависимости от типа жилья
+* @param {object} objMap
+*/
+var getPrice = function (objMap) {
+  adFormPrice.min = objMap[adFormType.value];
+  adFormPrice.placeholder = objMap[adFormType.value];
+};
+
 // дезактивация страницы
 desactivatePage();
 
@@ -242,5 +263,29 @@ MAIN_PIN.addEventListener('click', function () {
 MAIN_PIN.addEventListener('mouseup', function () {
   activatePage();
   enterCoordinate();
+  getPrice(typePriceMap);
   getNewPinList();
+});
+
+adFormType.addEventListener('change', function () {
+  getPrice(typePriceMap);
+});
+
+// т.к. по ТЗ поля «Время заезда» и «Время выезда» синхронизированы, создадим функцию, которая синхронизирует два селекта
+/**
+* синхронихирует выбор полей с одинаковым значением в двух списках
+* @param {HTMLSelectElement} select1
+* @param {HTMLSelectElement} select2
+*/
+var getSimilarChoice = function (select1, select2) {
+  select2.value = select1.value; // для списка2 делаем выбранным пункт с тем же значением value, что и выбранный пункт списка1
+};
+
+// синхронизируем изменения в полях «Время заезда» и «Время выезда»
+adFormTimeIn.addEventListener('change', function () {
+  getSimilarChoice(adFormTimeIn, adFormTimeOut);
+});
+
+adFormTimeOut.addEventListener('change', function () {
+  getSimilarChoice(adFormTimeOut, adFormTimeIn);
 });
