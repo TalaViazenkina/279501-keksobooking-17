@@ -270,6 +270,8 @@ var checkCoord = function (initialCoord, shiftCoord, minCoord, maxCoord) {
   return testCoord;
 };
 
+var moveCount = 0; // флаг/счетчик передвижения мыши
+
 /**
 * переводит страницу в неактивное состояние
 */
@@ -290,6 +292,8 @@ var desactivatePage = function () {
 
   // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
   getPrice(typePriceMap);
+
+  moveCount = 0; // обнуляем счетчик передвижения мыши
 };
 
 
@@ -301,7 +305,11 @@ desactivatePage();
 
 MAIN_PIN.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
-  activatePage();
+  moveCount += 1;
+
+  if (moveCount === 1) {
+    activatePage();
+  }
 
   var dragged = false; // флаг, который будет показывать было ли перемещение мыши
 
