@@ -276,6 +276,9 @@ var desactivatePage = function () {
 // дезактивация страницы
 desactivatePage();
 
+
+// перемещение главной метки
+
 MAIN_PIN.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
   activatePage();
@@ -303,26 +306,29 @@ MAIN_PIN.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY - startCoord.y
     };
 
-    // пересчитываем координаты метки, сравниваем их с диапазоном и задаем их в стили
-    // для y
-    var testCoord = MAIN_PIN.offsetTop + shift.y;
-    if (testCoord < LocationY.MIN) {
-      MAIN_PIN.style.top = LocationY.MIN + 'px';
-    } else if (testCoord < LocationY.MAX) {
-      MAIN_PIN.style.top = testCoord + 'px';
-    } else {
-      MAIN_PIN.style.top = LocationY.MAX + 'px';
-    }
+    // вынесем проверку координат в функцию
+    /** сравнивает полученную координату с заданным диапазоном
+    * @param {number} initialCoord
+    * @param {number} shiftCoord
+    * @param {number} minCoord
+    * @param {number} maxCoord
+    * @return {number}
+    */
+    var checkCoord = function (initialCoord, shiftCoord, minCoord, maxCoord) {
+      var testCoord = initialCoord + shiftCoord;
+      if (testCoord < minCoord) {
+        testCoord = minCoord;
+      }
+      if (testCoord > maxCoord) {
+        testCoord = maxCoord;
+      }
 
-    // для х
-    testCoord = MAIN_PIN.offsetLeft + shift.x;
-    if (testCoord < LocationX.MIN) {
-      MAIN_PIN.style.left = LocationX.MIN + 'px';
-    } else if (testCoord < LocationX.MAX) {
-      MAIN_PIN.style.left = testCoord + 'px';
-    } else {
-      MAIN_PIN.style.left = LocationX.MAX + 'px';
-    }
+      return testCoord;
+    };
+
+    // задаем новые координаты для метки в стили
+    MAIN_PIN.style.top = checkCoord(MAIN_PIN.offsetTop, shift.y, LocationY.MIN, LocationY.MAX) + 'px'; // y
+    MAIN_PIN.style.left = checkCoord(MAIN_PIN.offsetLeft, shift.x, LocationX.MIN, LocationX.MAX) + 'px'; // x
 
     // записываем измененные координаты в поле ввода
     enterCoordinate();
