@@ -250,6 +250,26 @@ var getPrice = function (objMap) {
   adFormPrice.placeholder = objMap[adFormType.value];
 };
 
+/** сравнивает полученную координату с заданным диапазоном
+* @param {number} initialCoord
+* @param {number} shiftCoord
+* @param {number} minCoord
+* @param {number} maxCoord
+* @return {number}
+*/
+var checkCoord = function (initialCoord, shiftCoord, minCoord, maxCoord) {
+  var testCoord = initialCoord + shiftCoord;
+  if (testCoord < minCoord) {
+    testCoord = minCoord;
+    return testCoord;
+  }
+  if (testCoord > maxCoord) {
+    testCoord = maxCoord;
+  }
+
+  return testCoord;
+};
+
 /**
 * переводит страницу в неактивное состояние
 */
@@ -306,25 +326,6 @@ MAIN_PIN.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY - startCoord.y
     };
 
-    // вынесем проверку координат в функцию
-    /** сравнивает полученную координату с заданным диапазоном
-    * @param {number} initialCoord
-    * @param {number} shiftCoord
-    * @param {number} minCoord
-    * @param {number} maxCoord
-    * @return {number}
-    */
-    var checkCoord = function (initialCoord, shiftCoord, minCoord, maxCoord) {
-      var testCoord = initialCoord + shiftCoord;
-      if (testCoord < minCoord) {
-        testCoord = minCoord;
-      }
-      if (testCoord > maxCoord) {
-        testCoord = maxCoord;
-      }
-
-      return testCoord;
-    };
 
     // задаем новые координаты для метки в стили
     MAIN_PIN.style.top = checkCoord(MAIN_PIN.offsetTop, shift.y, LocationY.MIN, LocationY.MAX) + 'px'; // y
