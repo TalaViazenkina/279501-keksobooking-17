@@ -35,7 +35,7 @@ var MAIN_PIN_HEIGHT = 81; // складывается из диаметра кр
 var MAIN_PIN_SIZE = 65;
 
 /**
-* изначальные координаты "главного пина"
+* изначальные координаты "главного пина" в состоянии "круглая метка"
 * @const
 * @type {number}
 */
@@ -50,23 +50,40 @@ var MAIN_PIN_COORDINATE_Y = MAIN_PIN.offsetTop + MAIN_PIN_SIZE / 2;
 var OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 
 /**
-* координата Y метки на карте, диапазон
+* координата Y острия метки на карте, диапазон (для похожих меток)
 * @enum {number}
 */
-var LocationY = {
+var LocationMarkerY = {
   MIN: 130,
   MAX: 630
 };
 
 /**
-* координата X метки на карте, диапазон
+* координата Y левого верхнего угла метки на карте, диапазон (для главной метки)
+* @enum {number}
+*/
+var LocationY = {
+  MIN: LocationMarkerY.MIN - MAIN_PIN_HEIGHT,
+  MAX: LocationMarkerY.MAX - MAIN_PIN_HEIGHT
+};
+
+/**
+* координата X левого верхнего угла метки на карте, диапазон (для главной метки)
 * @enum {number}
 */
 var LocationX = {
+  MIN: 0,
+  MAX: MAP.offsetWidth - MAIN_PIN_WIDTH
+};
+
+/**
+* координата X острия метки на карте, диапазон (для похожих меток)
+* @enum {number}
+*/
+var LocationMarkerX = {
   MIN: 0 + PIN_WIDTH / 2,
   MAX: MAP.offsetWidth - PIN_WIDTH / 2
 };
-
 
 // DOM-объекты
 var mapPinList = MAP.querySelector('.map__pins'); // блок с метками
@@ -122,8 +139,8 @@ var generateAd = function (numericalItem) {
       'type': getRandomArrayItem(OFFER_TYPES)
     },
     'location': {
-      'x': getRandomNumber(LocationX.MIN, LocationX.MAX),
-      'y': getRandomNumber(LocationY.MIN, LocationY.MAX)
+      'x': getRandomNumber(LocationMarkerX.MIN, LocationMarkerX.MAX),
+      'y': getRandomNumber(LocationMarkerY.MIN, LocationMarkerY.MAX)
     }
   };
 };
@@ -286,9 +303,26 @@ MAIN_PIN.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY - startCoord.y
     };
 
-    // пересчитываем координаты метки и задаем их в стили
-    MAIN_PIN.style.top = (MAIN_PIN.offsetTop + shift.y) + 'px';
-    MAIN_PIN.style.left = (MAIN_PIN.offsetLeft + shift.x) + 'px';
+    // пересчитываем координаты метки, сравниваем их с диапазоном и задаем их в стили
+    // для y
+    var testCoord = MAIN_PIN.offsetTop + shift.y;
+    if (testCoord < LocationY.MIN) {
+      MAIN_PIN.style.top = LocationY.MIN + 'px';
+    } else if (testCoord < LocationY.MAX) {
+      MAIN_PIN.style.top = testCoord + 'px';
+    } else {
+      MAIN_PIN.style.top = LocationY.MAX + 'px';
+    }
+
+    // для х
+    testCoord = MAIN_PIN.offsetLeft + shift.x;
+    if (testCoord < LocationX.MIN) {
+      MAIN_PIN.style.left = LocationX.MIN + 'px';
+    } else if (testCoord < LocationX.MAX) {
+      MAIN_PIN.style.left = testCoord + 'px';
+    } else {
+      MAIN_PIN.style.left = LocationX.MAX + 'px';
+    }
 
     // записываем измененные координаты в поле ввода
     enterCoordinate();
@@ -304,7 +338,7 @@ MAIN_PIN.addEventListener('mousedown', function (evt) {
     upEvt.preventDefault();
 
     if (!dragged) {
-      enterCoordinate(); // пересчитываем координаты метки в случае, если не было перемещения мыши
+      enterCoordinate(); // записываем координаты в поле ввода в случае, если не было перемещения мыши
     }
 
     getNewPinList(); // запускаем отрисовку меток похожих объявлений
