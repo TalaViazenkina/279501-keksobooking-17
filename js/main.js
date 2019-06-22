@@ -35,7 +35,7 @@ var MAIN_PIN_HEIGHT = 81; // складывается из диаметра кр
 var MAIN_PIN_SIZE = 65;
 
 /**
-* изначальные координаты "главного пина"
+* изначальные координаты "главного пина" в состоянии "круглая метка"
 * @const
 * @type {number}
 */
@@ -50,23 +50,40 @@ var MAIN_PIN_COORDINATE_Y = MAIN_PIN.offsetTop + MAIN_PIN_SIZE / 2;
 var OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 
 /**
-* координата Y метки на карте, диапазон
+* координата Y острия метки на карте, диапазон (для похожих меток)
 * @enum {number}
 */
-var LocationY = {
+var LocationMarkerY = {
   MIN: 130,
   MAX: 630
 };
 
 /**
-* координата X метки на карте, диапазон
+* координата Y левого верхнего угла метки на карте, диапазон (для главной метки)
+* @enum {number}
+*/
+var LocationY = {
+  MIN: LocationMarkerY.MIN - MAIN_PIN_HEIGHT,
+  MAX: LocationMarkerY.MAX - MAIN_PIN_HEIGHT
+};
+
+/**
+* координата X левого верхнего угла метки на карте, диапазон (для главной метки)
 * @enum {number}
 */
 var LocationX = {
+  MIN: 0,
+  MAX: MAP.offsetWidth - MAIN_PIN_WIDTH
+};
+
+/**
+* координата X острия метки на карте, диапазон (для похожих меток)
+* @enum {number}
+*/
+var LocationMarkerX = {
   MIN: 0 + PIN_WIDTH / 2,
   MAX: MAP.offsetWidth - PIN_WIDTH / 2
 };
-
 
 // DOM-объекты
 var mapPinList = MAP.querySelector('.map__pins'); // блок с метками
@@ -122,8 +139,8 @@ var generateAd = function (numericalItem) {
       'type': getRandomArrayItem(OFFER_TYPES)
     },
     'location': {
-      'x': getRandomNumber(LocationX.MIN, LocationX.MAX),
-      'y': getRandomNumber(LocationY.MIN, LocationY.MAX)
+      'x': getRandomNumber(LocationMarkerX.MIN, LocationMarkerX.MAX),
+      'y': getRandomNumber(LocationMarkerY.MIN, LocationMarkerY.MAX)
     }
   };
 };
@@ -215,24 +232,6 @@ var activatePage = function () {
   }
 };
 
-/**
-* переводит страницу в неактивное состояние
-*/
-var desactivatePage = function () {
-  // добавим всем элементам управления формой атрибут disabled
-  addDisabled(mapFiltersFieldset);
-
-  for (i = 0; i < mapFiltersSelectsList.length; i++) {
-    addDisabled(mapFiltersSelectsList[i]);
-  }
-
-  for (i = 0; i < adFormFieldsetsList.length; i++) {
-    addDisabled(adFormFieldsetsList[i]);
-  }
-  // передадим изначальные координаты метки в поле адреса
-  enterCoordinateInitial();
-};
-
 // создадим объект-мапу для хранения зависимости минимальной стоимости от типа жилья
 
 var typePriceMap = {
@@ -251,20 +250,121 @@ var getPrice = function (objMap) {
   adFormPrice.placeholder = objMap[adFormType.value];
 };
 
+/** сравнивает полученную координату с заданным диапазоном
+* @param {number} initialCoord
+* @param {number} shiftCoord
+* @param {number} minCoord
+* @param {number} maxCoord
+* @return {number}
+*/
+var checkCoord = function (initialCoord, shiftCoord, minCoord, maxCoord) {
+  var testCoord = initialCoord + shiftCoord;
+  if (testCoord < minCoord) {
+    testCoord = minCoord;
+    return testCoord;
+  }
+  if (testCoord > maxCoord) {
+    testCoord = maxCoord;
+  }
+
+  return testCoord;
+};
+
+var moveCount = 0; // флаг/счетчик передвижения мыши
+
+/**
+* переводит страницу в неактивное состояние
+*/
+var desactivatePage = function () {
+  // добавим всем элементам управления формой атрибут disabled
+  addDisabled(mapFiltersFieldset);
+
+  for (i = 0; i < mapFiltersSelectsList.length; i++) {
+    addDisabled(mapFiltersSelectsList[i]);
+  }
+
+  for (i = 0; i < adFormFieldsetsList.length; i++) {
+    addDisabled(adFormFieldsetsList[i]);
+  }
+
+  // передадим изначальные координаты метки в поле адреса
+  enterCoordinateInitial();
+
+  // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
+  getPrice(typePriceMap);
+
+  moveCount = 0; // обнуляем счетчик передвижения мыши
+};
+
+
 // дезактивация страницы
 desactivatePage();
 
-// активация страницы
-MAIN_PIN.addEventListener('click', function () {
-  activatePage();
-});
 
-// активация при перетаскивании метки
-MAIN_PIN.addEventListener('mouseup', function () {
-  activatePage();
-  enterCoordinate();
-  getPrice(typePriceMap);
-  getNewPinList();
+// перемещение главной метки
+
+MAIN_PIN.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+  moveCount += 1;
+
+  if (moveCount === 1) {
+    activatePage();
+  }
+
+  var dragged = false; // флаг, который будет показывать было ли перемещение мыши
+
+  // определяем координаты курсора в момент нажатия мышки
+  var startCoord = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  /**
+    * обработчик передвижения мышки
+    * @param {MouseEvent} moveEvt
+    */
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    dragged = true;
+
+    // определяем сдвиг курсора относительно предыдущего положения
+    var shift = {
+      x: moveEvt.clientX - startCoord.x,
+      y: moveEvt.clientY - startCoord.y
+    };
+
+
+    // задаем новые координаты для метки в стили
+    MAIN_PIN.style.top = checkCoord(MAIN_PIN.offsetTop, shift.y, LocationY.MIN, LocationY.MAX) + 'px'; // y
+    MAIN_PIN.style.left = checkCoord(MAIN_PIN.offsetLeft, shift.x, LocationX.MIN, LocationX.MAX) + 'px'; // x
+
+    // записываем измененные координаты в поле ввода
+    enterCoordinate();
+
+    // записываем в стартовые координаты текущие координаты курсора
+    startCoord = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    if (!dragged) {
+      enterCoordinate(); // записываем координаты в поле ввода в случае, если не было перемещения мыши
+    }
+
+    getNewPinList(); // запускаем отрисовку меток похожих объявлений
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+
 });
 
 adFormType.addEventListener('change', function () {
