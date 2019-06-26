@@ -15,8 +15,8 @@
   */
   var getNewPin = function (obj) {
     var newPin = mapPinTemplate.cloneNode(true);
-    newPin.style.left = obj.location.x - window.parameter.PIN_WIDTH / 2 + 'px';
-    newPin.style.top = obj.location.y - window.parameter.PIN_HEIGHT + 'px';
+    newPin.style.left = obj.location.x - window.data.PIN_WIDTH / 2 + 'px';
+    newPin.style.top = obj.location.y - window.data.PIN_HEIGHT + 'px';
 
     var newPinImg = newPin.querySelector('img'); // аватар на метке
     newPinImg.src = obj.author.avatar;

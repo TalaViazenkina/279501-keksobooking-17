@@ -1,44 +1,54 @@
 'use strict';
 
-// модуль, который создаёт данные для случайных объявлений
+// модуль с исходными параметрами и данными
 (function () {
+  window.data = {
+    /**
+    * тип недвижимости
+    * @enum {string}
+    */
+    OFFER_TYPES: ['palace', 'flat', 'house', 'bungalo'],
 
-  /**
-  * координата X острия метки на карте, диапазон (для похожих меток)
-  * @enum {number}
-  */
-  var LocationMarkerX = {
-    MIN: window.parameter.PIN_WIDTH / 2,
-    MAX: window.utils.MAP.offsetWidth - window.parameter.PIN_WIDTH / 2
+    /**
+    * координата Y острия метки на карте, допустимый диапазон
+    * @enum {number}
+    */
+    LocationY: {
+      MIN: 130,
+      MAX: 630
+    },
+
+    /**
+    * размеры пина для объявления из CSS
+    * @const
+    * @type {number}
+    */
+    PIN_WIDTH: 50,
+    PIN_HEIGHT: 70,
+
+    /**
+    * размеры "главного пина" (изначальной метки) из CSS, состояние "с острым концом"
+    * @const
+    * @type {number}
+    */
+    MAIN_PIN_WIDTH: 65,
+    MAIN_PIN_HEIGHT: 81, // складывается из диаметра круга плюс высота треугольника-острия минус смещение острия по вертикали
+
+    /**
+    * диаметр "главного пина" (изначальной метки) из CSS, состояние "круглая метка"
+    * @const
+    * @type {number}
+    */
+    MAIN_PIN_SIZE: 65,
+
+
+    // создадим объект-мапу для хранения зависимости минимальной стоимости от типа жилья
+    typePriceMap: {
+      'bungalo': 0,
+      'flat': 1000,
+      'house': 5000,
+      'palace': 10000
+    }
+
   };
-
-
-  /**
-  * создает случайное объявление
-  * @param {number} numericalItem
-  * @return {Object}
-  */
-  var generateAd = function (numericalItem) {
-    return {
-      'author': {
-        'avatar': 'img/avatars/user0' + numericalItem + '.png'
-      },
-      'offer': {
-        'type': window.utils.getRandomArrayItem(window.parameter.OFFER_TYPES)
-      },
-      'location': {
-        'x': window.utils.getRandomNumber(LocationMarkerX.MIN, LocationMarkerX.MAX),
-        'y': window.utils.getRandomNumber(window.parameter.LocationY.MIN, window.parameter.LocationY.MAX)
-      }
-    };
-  };
-
-
-  // создадим массив из заданного числа случайных объявлений
-  var randomAdsList = [];
-  for (var i = 0; i < window.parameter.ADS_NUMBER; i++) {
-    randomAdsList.push(generateAd(i + 1));
-  }
-
-  window.data = randomAdsList;
 })();

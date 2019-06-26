@@ -21,7 +21,7 @@
   };
 
   adFormType.addEventListener('change', function () {
-    window.form.getPrice(window.parameter.typePriceMap);
+    window.form.getPrice(window.data.typePriceMap);
   });
 
   // т.к. по ТЗ поля «Время заезда» и «Время выезда» синхронизированы, создадим функцию, которая синхронизирует два селекта

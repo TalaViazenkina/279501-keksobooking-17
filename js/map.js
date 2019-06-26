@@ -9,16 +9,16 @@
   * @const
   * @type {number}
   */
-  var MAIN_PIN_COORDINATE_X = MAIN_PIN.offsetLeft + window.parameter.MAIN_PIN_SIZE / 2;
-  var MAIN_PIN_COORDINATE_Y = MAIN_PIN.offsetTop + window.parameter.MAIN_PIN_SIZE / 2;
+  var MAIN_PIN_COORDINATE_X = MAIN_PIN.offsetLeft + window.data.MAIN_PIN_SIZE / 2;
+  var MAIN_PIN_COORDINATE_Y = MAIN_PIN.offsetTop + window.data.MAIN_PIN_SIZE / 2;
 
   /**
   * координата Y левого верхнего угла метки на карте, диапазон (для главной метки)
   * @enum {number}
   */
   var LocationY = {
-    MIN: window.parameter.LocationY.MIN - window.parameter.MAIN_PIN_HEIGHT,
-    MAX: window.parameter.LocationY.MAX - window.parameter.MAIN_PIN_HEIGHT
+    MIN: window.data.LocationY.MIN - window.data.MAIN_PIN_HEIGHT,
+    MAX: window.data.LocationY.MAX - window.data.MAIN_PIN_HEIGHT
   };
 
   /**
@@ -27,7 +27,7 @@
   */
   var LocationX = {
     MIN: 0,
-    MAX: window.utils.MAP.offsetWidth - window.parameter.MAIN_PIN_WIDTH
+    MAX: window.utils.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH
   };
 
   // форма подачи объявления
@@ -52,7 +52,7 @@
   * заполняет поле координатами передвинутой метки
   */
   var enterCoordinate = function () {
-    adFormAddress.value = (MAIN_PIN.offsetLeft + window.parameter.MAIN_PIN_WIDTH / 2) + ', ' + (MAIN_PIN.offsetTop + window.parameter.MAIN_PIN_HEIGHT);
+    adFormAddress.value = (MAIN_PIN.offsetLeft + window.data.MAIN_PIN_WIDTH / 2) + ', ' + (MAIN_PIN.offsetTop + window.data.MAIN_PIN_HEIGHT);
   };
 
   /** сравнивает полученную координату с заданным диапазоном
@@ -94,7 +94,7 @@
     enterCoordinateInitial();
 
     // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
-    window.form.getPrice(window.parameter.typePriceMap);
+    window.form.getPrice(window.data.typePriceMap);
 
     moveCount = 0; // обнуляем счетчик передвижения мыши
   };
