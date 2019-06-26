@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  window.util = {
+  window.utils = {
     MAP: document.querySelector('.map'), // карта
     adForm: document.querySelector('.ad-form'), // форма добавления объявлений
 

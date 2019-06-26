@@ -9,7 +9,7 @@
   */
   var LocationMarkerX = {
     MIN: window.parameter.PIN_WIDTH / 2,
-    MAX: window.util.MAP.offsetWidth - window.parameter.PIN_WIDTH / 2
+    MAX: window.utils.MAP.offsetWidth - window.parameter.PIN_WIDTH / 2
   };
 
 
@@ -24,11 +24,11 @@
         'avatar': 'img/avatars/user0' + numericalItem + '.png'
       },
       'offer': {
-        'type': window.util.getRandomArrayItem(window.parameter.OFFER_TYPES)
+        'type': window.utils.getRandomArrayItem(window.parameter.OFFER_TYPES)
       },
       'location': {
-        'x': window.util.getRandomNumber(LocationMarkerX.MIN, LocationMarkerX.MAX),
-        'y': window.util.getRandomNumber(window.parameter.LocationY.MIN, window.parameter.LocationY.MAX)
+        'x': window.utils.getRandomNumber(LocationMarkerX.MIN, LocationMarkerX.MAX),
+        'y': window.utils.getRandomNumber(window.parameter.LocationY.MIN, window.parameter.LocationY.MAX)
       }
     };
   };

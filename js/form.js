@@ -4,10 +4,10 @@
 (function () {
 
   // форма добавления объявлений
-  var adFormType = window.util.adForm.querySelector('#type'); // поле выбора типа жилья
-  var adFormPrice = window.util.adForm.querySelector('#price'); // поле ввода цены за ночь
-  var adFormTimeIn = window.util.adForm.querySelector('#timein'); // поле ввода времени заезда
-  var adFormTimeOut = window.util.adForm.querySelector('#timeout'); // поле ввода времени выезда
+  var adFormType = window.utils.adForm.querySelector('#type'); // поле выбора типа жилья
+  var adFormPrice = window.utils.adForm.querySelector('#price'); // поле ввода цены за ночь
+  var adFormTimeIn = window.utils.adForm.querySelector('#timein'); // поле ввода времени заезда
+  var adFormTimeOut = window.utils.adForm.querySelector('#timeout'); // поле ввода времени выезда
 
   window.form = {
     /**
