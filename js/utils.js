@@ -39,5 +39,9 @@
     removeDisabled: function (el) {
       el.removeAttribute('disabled');
     },
+
+    onError: function (message) {
+      console.error(message);
+    }
   };
 })();

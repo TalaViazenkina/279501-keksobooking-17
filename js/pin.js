@@ -20,24 +20,28 @@
 
     var newPinImg = newPin.querySelector('img'); // аватар на метке
     newPinImg.src = obj.author.avatar;
-    newPinImg.alt = 'Заголовок объявления';
+    newPinImg.alt = obj.offer.title;
 
     return newPin;
   };
 
-  window.pin = {
-    /**
-    * добавляет в разметку необходимое количество DOM-элементов
-    * @param {number} quantity
-    * @param {array} arr массив объектов на основании которого происходит наполнение шаблона
-    */
-    getNewPinList: function (quantity, arr) {
-      var fragment = document.createDocumentFragment();
-      for (var j = 0; j < quantity; j++) {
-        fragment.appendChild(getNewPin(arr[j]));
+  /**
+  * добавляет в разметку необходимое количество DOM-элементов
+  * @param {array} arr массив объектов на основании которого происходит наполнение шаблона
+  */
+  var getNewPinList = function (arr) {
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i].offer) {
+        fragment.appendChild(getNewPin(arr[i]));
       }
+    }
+    mapPinList.appendChild(fragment);
+  };
 
-      mapPinList.appendChild(fragment);
+  window.pin = {
+    onLoadSuccess: function (response) {
+      getNewPinList(response);
     }
   };
 
