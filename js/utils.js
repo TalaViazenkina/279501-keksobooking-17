@@ -1,6 +1,12 @@
 'use strict';
 
 (function () {
+  var errorTemplate = document.querySelector('#error')
+  .content
+  .querySelector('.error');
+
+  var main = document.querySelector('main');
+
   window.utils = {
     MAP: document.querySelector('.map'), // карта
     adForm: document.querySelector('.ad-form'), // форма добавления объявлений
@@ -41,7 +47,11 @@
     },
 
     onError: function (message) {
-      console.error(message);
+      var errorNode = errorTemplate.cloneNode(true);
+      var errorText = errorNode.querySelector('.error__message');
+      errorText.textContent = message;
+
+      main.insertAdjacentElement('afterbegin', errorNode);
     }
   };
 })();
