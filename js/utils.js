@@ -87,9 +87,9 @@
       * закрывает сообщение по клику на произвольную область
       * @param {event} evt
       */
-      var onDocumentMousedown = function (evt) {
+      var onDocumentClick = function (evt) {
         closeError(evt);
-        document.removeEventListener('click', onDocumentMousedown);
+        document.removeEventListener('click', onDocumentClick);
       };
 
       /**
@@ -106,7 +106,7 @@
       var errorButton = errorNode.querySelector('.error__button');
       // добавим обработчики событий для закрытия окна ошибки
       errorButton.addEventListener('click', onButtonClick);
-      document.addEventListener('mousedown', onDocumentMousedown);
+      document.addEventListener('click', onDocumentClick);
       document.addEventListener('keydown', onDocumentKeydown);
     }
   };

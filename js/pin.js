@@ -8,6 +8,8 @@
     .content
     .querySelector('button');
 
+  var isSimilarPin = false; // флаг, показывающий была ли уже отрисовка пинов
+
   /**
   * используя шаблон создает  новый DOM-элемент для метки
   * @param {Object} obj JS-объект на основе которого происходит наполнение шаблона
@@ -15,6 +17,8 @@
   */
   var getNewPin = function (obj) {
     var newPin = mapPinTemplate.cloneNode(true);
+    // добавим класс, чтобы потом эти метки можно было отследить
+    newPin.classList.add('map__pin--similar');
     newPin.style.left = obj.location.x - window.data.PIN_WIDTH / 2 + 'px';
     newPin.style.top = obj.location.y - window.data.PIN_HEIGHT + 'px';
 
@@ -30,6 +34,12 @@
   * @param {array} arr массив объектов на основании которого происходит наполнение шаблона
   */
   var getNewPinList = function (arr) {
+    // если метки уже отрисованы - удаляем их из разметки
+    if (isSimilarPin) {
+      mapPinList.removeChild('map__pin--similar');
+    }
+
+    // запускаем отрисовку и добавляем метки в разметку
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < arr.length; i++) {
       if (arr[i].offer) {
@@ -37,6 +47,8 @@
       }
     }
     mapPinList.appendChild(fragment);
+
+    isSimilarPin = true; // меняем флаг
   };
 
   window.pin = {

@@ -129,8 +129,6 @@
 
     if (moveCount === 1) {
       activatePage();
-      // запускаем отрисовку меток похожих объявлений
-      window.backend.load(window.pin.onLoadSuccess, window.utils.onError);
     }
 
     var dragged = false; // флаг, который будет показывать было ли перемещение мыши
@@ -176,6 +174,8 @@
       if (!dragged) {
         enterCoordinate(); // записываем координаты в поле ввода в случае, если не было перемещения мыши
       }
+      // запускаем отрисовку меток похожих объявлений
+      window.backend.load(window.pin.onLoadSuccess, window.utils.onError);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
