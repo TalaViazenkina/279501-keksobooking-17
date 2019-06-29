@@ -36,9 +36,12 @@
   var getNewPinList = function (arr) {
     // если метки уже отрисованы - удаляем их из разметки
     if (isSimilarPin) {
-      mapPinList.removeChild('map__pin--similar');
-    }
+      Array.from(mapPinList.querySelectorAll('.map__pin--similar'))
+      .forEach(function (newPin) {
+        mapPinList.removeChild(newPin);
+      });
 
+    }
     // запускаем отрисовку и добавляем метки в разметку
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < arr.length; i++) {
