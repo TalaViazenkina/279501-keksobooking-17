@@ -2,11 +2,13 @@
 
 // модуль отрисовки пинов на карте
 (function () {
-  var mapPinList = window.util.MAP.querySelector('.map__pins'); // блок с метками
+  var mapPinList = window.utils.MAP.querySelector('.map__pins'); // блок с метками
 
   var mapPinTemplate = document.querySelector('#pin') // шаблон метки
     .content
     .querySelector('button');
+
+  var isSimilarPin = false; // флаг, показывающий была ли уже отрисовка пинов
 
   /**
   * используя шаблон создает  новый DOM-элемент для метки
@@ -15,29 +17,46 @@
   */
   var getNewPin = function (obj) {
     var newPin = mapPinTemplate.cloneNode(true);
-    newPin.style.left = obj.location.x - window.parameter.PIN_WIDTH / 2 + 'px';
-    newPin.style.top = obj.location.y - window.parameter.PIN_HEIGHT + 'px';
+    // добавим класс, чтобы потом эти метки можно было отследить
+    newPin.classList.add('map__pin--similar');
+    newPin.style.left = obj.location.x - window.data.PIN_WIDTH / 2 + 'px';
+    newPin.style.top = obj.location.y - window.data.PIN_HEIGHT + 'px';
 
     var newPinImg = newPin.querySelector('img'); // аватар на метке
     newPinImg.src = obj.author.avatar;
-    newPinImg.alt = 'Заголовок объявления';
+    newPinImg.alt = obj.offer.title;
 
     return newPin;
   };
 
-  window.pin = {
-    /**
-    * добавляет в разметку необходимое количество DOM-элементов
-    * @param {number} quantity
-    * @param {array} arr массив объектов на основании которого происходит наполнение шаблона
-    */
-    getNewPinList: function (quantity, arr) {
-      var fragment = document.createDocumentFragment();
-      for (var j = 0; j < quantity; j++) {
-        fragment.appendChild(getNewPin(arr[j]));
-      }
+  /**
+  * добавляет в разметку необходимое количество DOM-элементов
+  * @param {array} arr массив объектов на основании которого происходит наполнение шаблона
+  */
+  var getNewPinList = function (arr) {
+    // если метки уже отрисованы - удаляем их из разметки
+    if (isSimilarPin) {
+      Array.from(mapPinList.querySelectorAll('.map__pin--similar'))
+      .forEach(function (newPin) {
+        mapPinList.removeChild(newPin);
+      });
 
-      mapPinList.appendChild(fragment);
+    }
+    // запускаем отрисовку и добавляем метки в разметку
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < arr.length; i++) {
+      if (arr[i].offer) {
+        fragment.appendChild(getNewPin(arr[i]));
+      }
+    }
+    mapPinList.appendChild(fragment);
+
+    isSimilarPin = true; // меняем флаг
+  };
+
+  window.pin = {
+    onLoadSuccess: function (response) {
+      getNewPinList(response);
     }
   };
 

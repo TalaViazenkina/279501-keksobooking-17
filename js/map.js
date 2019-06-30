@@ -2,23 +2,23 @@
 
 // модуль, отвечающий за активацию страницы при перетаскивании пина
 (function () {
-  var MAIN_PIN = window.util.MAP.querySelector('.map__pin--main'); // главная метка
+  var MAIN_PIN = window.utils.MAP.querySelector('.map__pin--main'); // главная метка
 
   /**
   * изначальные координаты "главного пина" в состоянии "круглая метка"
   * @const
   * @type {number}
   */
-  var MAIN_PIN_COORDINATE_X = MAIN_PIN.offsetLeft + window.parameter.MAIN_PIN_SIZE / 2;
-  var MAIN_PIN_COORDINATE_Y = MAIN_PIN.offsetTop + window.parameter.MAIN_PIN_SIZE / 2;
+  var MAIN_PIN_COORDINATE_X = MAIN_PIN.offsetLeft + window.data.MAIN_PIN_SIZE / 2;
+  var MAIN_PIN_COORDINATE_Y = MAIN_PIN.offsetTop + window.data.MAIN_PIN_SIZE / 2;
 
   /**
   * координата Y левого верхнего угла метки на карте, диапазон (для главной метки)
   * @enum {number}
   */
   var LocationY = {
-    MIN: window.parameter.LocationY.MIN - window.parameter.MAIN_PIN_HEIGHT,
-    MAX: window.parameter.LocationY.MAX - window.parameter.MAIN_PIN_HEIGHT
+    MIN: window.data.LocationY.MIN - window.data.MAIN_PIN_HEIGHT,
+    MAX: window.data.LocationY.MAX - window.data.MAIN_PIN_HEIGHT
   };
 
   /**
@@ -27,15 +27,15 @@
   */
   var LocationX = {
     MIN: 0,
-    MAX: window.util.MAP.offsetWidth - window.parameter.MAIN_PIN_WIDTH
+    MAX: window.utils.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH
   };
 
   // форма подачи объявления
-  var adFormFieldsetsList = window.util.adForm.querySelectorAll('fieldset');
-  var adFormAddress = window.util.adForm.querySelector('#address'); // поля ввода координат адреса
+  var adFormFieldsetsList = window.utils.adForm.querySelectorAll('fieldset');
+  var adFormAddress = window.utils.adForm.querySelector('#address'); // поля ввода координат адреса
 
   // форма фильтрации объявлений
-  var mapFilters = window.util.MAP.querySelector('.map__filters');
+  var mapFilters = window.utils.MAP.querySelector('.map__filters');
   var mapFiltersSelectsList = mapFilters.querySelectorAll('.map__filter'); // все селекты в форме фильтрации
   var mapFiltersFieldset = mapFilters.querySelector('.map__features'); // филдсет в форме фильтрации
 
@@ -52,7 +52,7 @@
   * заполняет поле координатами передвинутой метки
   */
   var enterCoordinate = function () {
-    adFormAddress.value = (MAIN_PIN.offsetLeft + window.parameter.MAIN_PIN_WIDTH / 2) + ', ' + (MAIN_PIN.offsetTop + window.parameter.MAIN_PIN_HEIGHT);
+    adFormAddress.value = (MAIN_PIN.offsetLeft + window.data.MAIN_PIN_WIDTH / 2) + ', ' + (MAIN_PIN.offsetTop + window.data.MAIN_PIN_HEIGHT);
   };
 
   /** сравнивает полученную координату с заданным диапазоном
@@ -80,21 +80,21 @@
   */
   var desactivatePage = function () {
     // добавим всем элементам управления формой атрибут disabled
-    window.util.addDisabled(mapFiltersFieldset);
+    window.utils.addDisabled(mapFiltersFieldset);
 
     for (var i = 0; i < mapFiltersSelectsList.length; i++) {
-      window.util.addDisabled(mapFiltersSelectsList[i]);
+      window.utils.addDisabled(mapFiltersSelectsList[i]);
     }
 
     for (i = 0; i < adFormFieldsetsList.length; i++) {
-      window.util.addDisabled(adFormFieldsetsList[i]);
+      window.utils.addDisabled(adFormFieldsetsList[i]);
     }
 
     // передадим изначальные координаты метки в поле адреса
     enterCoordinateInitial();
 
     // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
-    window.form.getPrice(window.parameter.typePriceMap);
+    window.form.getPrice(window.data.typePriceMap);
 
     moveCount = 0; // обнуляем счетчик передвижения мыши
   };
@@ -103,18 +103,18 @@
   * активирует страницу
   */
   var activatePage = function () {
-    window.util.MAP.classList.remove('map--faded');
-    window.util.adForm.classList.remove('ad-form--disabled');
+    window.utils.MAP.classList.remove('map--faded');
+    window.utils.adForm.classList.remove('ad-form--disabled');
 
     // удаляем со всех элементов управления формой атрибут disabled
-    window.util.removeDisabled(mapFiltersFieldset);
+    window.utils.removeDisabled(mapFiltersFieldset);
 
     for (var i = 0; i < mapFiltersSelectsList.length; i++) {
-      window.util.removeDisabled(mapFiltersSelectsList[i]);
+      window.utils.removeDisabled(mapFiltersSelectsList[i]);
     }
 
     for (i = 0; i < adFormFieldsetsList.length; i++) {
-      window.util.removeDisabled(adFormFieldsetsList[i]);
+      window.utils.removeDisabled(adFormFieldsetsList[i]);
     }
   };
 
@@ -174,8 +174,8 @@
       if (!dragged) {
         enterCoordinate(); // записываем координаты в поле ввода в случае, если не было перемещения мыши
       }
-
-      window.pin.getNewPinList(window.parameter.ADS_NUMBER, window.data); // запускаем отрисовку меток похожих объявлений
+      // запускаем отрисовку меток похожих объявлений
+      window.backend.load(window.pin.onLoadSuccess, window.utils.onError);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
