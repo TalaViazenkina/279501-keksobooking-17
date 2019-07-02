@@ -2,6 +2,7 @@
 
 // модуль, отвечающий за активацию страницы при перетаскивании пина
 (function () {
+  var ADS_MAX_NUMBER = 5; // максимальное количество похожих объявлений, отображаемое на карте
   var MAIN_PIN = window.utils.MAP.querySelector('.map__pin--main'); // главная метка
 
   /**
@@ -118,6 +119,11 @@
     }
   };
 
+  var onLoadSuccess = function (response) {
+    window.data.adsList = response;
+    window.pin.getNewPinList(window.data.adsList.slice(0, ADS_MAX_NUMBER));
+  };
+
 
   // дезактивация страницы
   desactivatePage();
@@ -175,10 +181,11 @@
         enterCoordinate(); // записываем координаты в поле ввода в случае, если не было перемещения мыши
       }
       // запускаем отрисовку меток похожих объявлений
-      window.backend.load(window.pin.onLoadSuccess, window.utils.onError);
+      window.backend.load(onLoadSuccess, window.utils.onError);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
+
     };
 
     document.addEventListener('mousemove', onMouseMove);
