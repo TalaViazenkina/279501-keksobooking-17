@@ -2,7 +2,6 @@
 
 // модуль, отвечающий за активацию страницы при перетаскивании пина
 (function () {
-  var ADS_MAX_NUMBER = 5; // максимальное количество похожих объявлений, отображаемое на карте
   var MAIN_PIN = window.utils.MAP.querySelector('.map__pin--main'); // главная метка
 
   /**
@@ -36,9 +35,8 @@
   var adFormAddress = window.utils.adForm.querySelector('#address'); // поля ввода координат адреса
 
   // форма фильтрации объявлений
-  var mapFilters = window.utils.MAP.querySelector('.map__filters');
-  var mapFiltersSelectsList = mapFilters.querySelectorAll('.map__filter'); // все селекты в форме фильтрации
-  var mapFiltersFieldset = mapFilters.querySelector('.map__features'); // филдсет в форме фильтрации
+  var mapFiltersSelectsList = window.filters.mapFilters.querySelectorAll('.map__filter'); // все селекты в форме фильтрации
+  var mapFiltersFieldset = window.filters.mapFilters.querySelector('.map__features'); // филдсет в форме фильтрации
 
   var moveCount = 0; // флаг/счетчик передвижения мыши
 
@@ -121,7 +119,7 @@
 
   var onLoadSuccess = function (response) {
     window.data.adsList = response;
-    window.pin.getNewPinList(window.data.adsList.slice(0, ADS_MAX_NUMBER));
+    window.pin.getNewPinList(window.data.adsList.slice(0, window.data.ADS_MAX_NUMBER));
   };
 
 
