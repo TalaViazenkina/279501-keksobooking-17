@@ -35,8 +35,8 @@
   var adFormAddress = window.utils.adForm.querySelector('#address'); // поля ввода координат адреса
 
   // форма фильтрации объявлений
-  var mapFiltersSelectsList = window.filters.mapFilters.querySelectorAll('.map__filter'); // все селекты в форме фильтрации
-  var mapFiltersFieldset = window.filters.mapFilters.querySelector('.map__features'); // филдсет в форме фильтрации
+  var mapFiltersSelectsList = window.filters.form.querySelectorAll('.map__filter'); // все селекты в форме фильтрации
+  var mapFiltersFieldset = window.filters.form.querySelector('.map__features'); // филдсет в форме фильтрации
 
   var moveCount = 0; // флаг/счетчик передвижения мыши
 

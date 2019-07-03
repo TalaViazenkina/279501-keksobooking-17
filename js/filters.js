@@ -3,11 +3,11 @@
 // модуль фильтрации объявлений
 (function () {
   window.filters = {
-    mapFilters: window.utils.MAP.querySelector('.map__filters') // форма с фильтрами
+    form: window.utils.MAP.querySelector('.map__filters') // форма с фильтрами
   };
 
-  var selectType = window.filters.mapFilters.querySelector('select[name=housing-type]'); // фильтр типа жилья
-  var selectPrice = window.filters.mapFilters.querySelector('select[name=housing-price]'); // фильтр стоимости
+  var selectType = window.filters.form.querySelector('select[name=housing-type]'); // фильтр типа жилья
+  var selectPrice = window.filters.form.querySelector('select[name=housing-price]'); // фильтр стоимости
 
   // переменные для хранения текущего значения выбранного фильтра
   // зададим "стартовое" значение
@@ -87,7 +87,7 @@
 
   // добавим обработчик события change на всю форму,
   // а выбранный фильтр будем отслеживать по evt.target
-  window.filters.mapFilters.addEventListener('change', function (evt) {
+  window.filters.form.addEventListener('change', function (evt) {
     // запишем значение выбранного фильтра в соответствующую переменную
     nameSelectedValueMap[evt.target.name](evt.target.value);
 
