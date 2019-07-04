@@ -25,9 +25,9 @@
   * координата X левого верхнего угла метки на карте, диапазон (для главной метки)
   * @enum {number}
   */
-  var LocationX = {
+  var locationX = {
     MIN: 0,
-    MAX: window.utils.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH
+    max: window.utils.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH
   };
 
   // форма подачи объявления
@@ -126,6 +126,10 @@
   // дезактивация страницы
   desactivatePage();
 
+  window.addEventListener('resize', function () {
+    locationX.max = window.utils.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH;
+  });
+
   // перемещение главной метки
   MAIN_PIN.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -160,7 +164,7 @@
 
       // задаем новые координаты для метки в стили
       MAIN_PIN.style.top = checkCoord(MAIN_PIN.offsetTop, shift.y, LocationY.MIN, LocationY.MAX) + 'px'; // y
-      MAIN_PIN.style.left = checkCoord(MAIN_PIN.offsetLeft, shift.x, LocationX.MIN, LocationX.MAX) + 'px'; // x
+      MAIN_PIN.style.left = checkCoord(MAIN_PIN.offsetLeft, shift.x, locationX.MIN, locationX.max) + 'px'; // x
 
       // записываем измененные координаты в поле ввода
       enterCoordinate();
