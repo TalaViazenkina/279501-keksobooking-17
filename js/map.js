@@ -35,9 +35,8 @@
   var adFormAddress = window.utils.adForm.querySelector('#address'); // поля ввода координат адреса
 
   // форма фильтрации объявлений
-  var mapFilters = window.utils.MAP.querySelector('.map__filters');
-  var mapFiltersSelectsList = mapFilters.querySelectorAll('.map__filter'); // все селекты в форме фильтрации
-  var mapFiltersFieldset = mapFilters.querySelector('.map__features'); // филдсет в форме фильтрации
+  var mapFiltersSelectsList = window.filters.form.querySelectorAll('.map__filter'); // все селекты в форме фильтрации
+  var mapFiltersFieldset = window.filters.form.querySelector('.map__features'); // филдсет в форме фильтрации
 
   var moveCount = 0; // флаг/счетчик передвижения мыши
 
@@ -118,6 +117,11 @@
     }
   };
 
+  var onLoadSuccess = function (response) {
+    window.data.adsList = response;
+    window.pin.getNewPinList(window.data.adsList.slice(0, window.data.ADS_MAX_NUMBER));
+  };
+
 
   // дезактивация страницы
   desactivatePage();
@@ -175,10 +179,11 @@
         enterCoordinate(); // записываем координаты в поле ввода в случае, если не было перемещения мыши
       }
       // запускаем отрисовку меток похожих объявлений
-      window.backend.load(window.pin.onLoadSuccess, window.utils.onError);
+      window.backend.load(onLoadSuccess, window.utils.onError);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
+
     };
 
     document.addEventListener('mousemove', onMouseMove);
