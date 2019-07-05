@@ -4,6 +4,9 @@
 (function () {
   var MAIN_PIN = window.utils.MAP.querySelector('.map__pin--main'); // главная метка
 
+  // максимальная ширина карты (из CSS)ж
+  var MAP_MAX_WIDTH = 1200;
+
   /**
   * изначальные координаты "главного пина" в состоянии "круглая метка"
   * @const
@@ -45,6 +48,16 @@
   */
   var enterCoordinateInitial = function () {
     adFormAddress.value = MAIN_PIN_COORDINATE_X + ', ' + MAIN_PIN_COORDINATE_Y;
+  };
+
+  /**
+  * перерасчитывает максимальную координату x метки при изменении ширины окна браузера
+  */
+  var updateCoordinate = function () {
+    if (window.utils.MAP.offsetWidth < MAP_MAX_WIDTH) {
+      locationX.max = window.utils.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH;
+    }
+
   };
 
   /**
@@ -127,7 +140,7 @@
   desactivatePage();
 
   window.addEventListener('resize', function () {
-    locationX.max = window.utils.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH;
+    window.debounce(updateCoordinate);
   });
 
   // перемещение главной метки
