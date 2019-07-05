@@ -133,7 +133,7 @@
   var onLoadSuccess = function (response) {
     window.data.adsList = response;
     window.pin.getNewPinList(window.data.adsList.slice(0, window.data.ADS_MAX_NUMBER));
-    window.card.renderCard(window.data.adsList[0]);
+    window.card.renderCard(window.data.adsList[3]);
   };
 
 
