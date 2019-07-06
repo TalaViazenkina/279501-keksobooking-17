@@ -54,6 +54,17 @@
     },
 
     /**
+    * проверяет, был ли нажат esc
+    * @param {event} evt
+    * @param {function} action
+    */
+    isEscEvent: function (evt, action) {
+      if (evt.keyCode === ESC_KEYCODE) {
+        action();
+      }
+    },
+
+    /**
     * ввыводит сообщение об ошибке
     * @param {string} message
     */
@@ -69,45 +80,40 @@
       * удаляет сообщение об ошибке из DOM
       * @param {event} evt
       */
-      var closeError = function (evt) {
-        evt.preventDefault();
+      var closeError = function () {
         errorNode.remove();
-      };
-
-      /**
-      * закрывает сообщение по клику на кнопку
-      * @param {event} evt
-      */
-      var onButtonClick = function (evt) {
-        closeError(evt);
-        errorButton.removeEventListener('click', onButtonClick);
+        document.removeEventListener('click', onErrorClick);
+        document.removeEventListener('keydown', onErrorEscPress);
       };
 
       /**
       * закрывает сообщение по клику на произвольную область
       * @param {event} evt
       */
-      var onDocumentClick = function (evt) {
-        closeError(evt);
-        document.removeEventListener('click', onDocumentClick);
+      var onErrorClick = function (evt) {
+        evt.preventDefault();
+        closeError();
       };
 
       /**
       * закрывает сообщение по esc
       * @param {event} evt
       */
-      var onDocumentKeydown = function (evt) {
+      var onErrorEscPress = function (evt) {
+        evt.preventDefault();
         if (evt.keyCode === ESC_KEYCODE) {
-          closeError(evt);
-          document.removeEventListener('keydown', onDocumentKeydown);
+          closeError();
         }
       };
 
       var errorButton = errorNode.querySelector('.error__button');
       // добавим обработчики событий для закрытия окна ошибки
-      errorButton.addEventListener('click', onButtonClick);
-      document.addEventListener('click', onDocumentClick);
-      document.addEventListener('keydown', onDocumentKeydown);
+      errorButton.addEventListener('click', function (evt) {
+        evt.preventDefault();
+        closeError();
+      });
+      document.addEventListener('click', onErrorClick);
+      document.addEventListener('keydown', onErrorEscPress);
     }
   };
 })();

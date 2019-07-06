@@ -2,6 +2,7 @@
 
 // модуль, отвечающий за отрисовку карточки объявления
 (function () {
+  var card;
 
   // шаблон объявления
   var cardTemplate = document.querySelector('#card')
@@ -32,11 +33,25 @@
   };
 
   /**
+  * закрывает попап
+  * @param {Event} evt
+  */
+  var closePopap = function () {
+    window.utils.MAP.removeChild(card);
+    document.removeEventListener('keydown', onPopapEscPress);
+  };
+
+  var onPopapEscPress = function (evt) {
+    evt.preventDefault();
+    window.utils.isEscEvent(evt, closePopap);
+  };
+
+  /**
   * отрисовывает карточку объявления по шаблону
   * @param {object} obj
   */
   var renderCard = function (obj) {
-    var card = cardTemplate.cloneNode(true);
+    card = cardTemplate.cloneNode(true);
 
     // поле с заголовком
     var cardTitle = card.querySelector('.popup__title');
@@ -136,6 +151,17 @@
       cardAvatar.style.display = 'none';
     }
 
+    // закрытие попапа
+    var cardButton = card.querySelector('.popup__close'); // кнопка закрытия
+
+    cardButton.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      closePopap();
+    });
+
+    document.addEventListener('keydown', onPopapEscPress);
+
+    // добавляем отрисованную карточку в разметку
     window.utils.MAP.insertBefore(card, window.utils.MAP.querySelector('.map__filters-container'));
   };
 
