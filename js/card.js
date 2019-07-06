@@ -16,6 +16,8 @@
     'palace': 'Дворец'
   };
 
+
+
   /**
   * заполняет поле текстовой информацией
   * @param {HTMLElement} field
@@ -65,8 +67,6 @@
     } else {
       rooms = ' комнат для ';
     }
-
-
     var guests = (obj.offer.guests === 1) ? ' гостя' : ' гостей';
 
     cardCapacity.textContent = fillField(cardCapacity, obj.offer.rooms) + rooms + fillField(cardCapacity, obj.offer.guests) + guests;
@@ -79,8 +79,35 @@
     var cardDescription = card.querySelector('.popup__description');
     fillField(cardDescription, obj.offer.description);
 
-    // список с доступными удобствами
+    //  поле с доступными удобствами
+    var cardFeatures = card.querySelector('ul.popup__features');
+    var cardWifi = cardFeatures.querySelector('.popup__feature--wifi');
+    var cardDishwasher = cardFeatures.querySelector('.popup__feature--dishwasher');
+    var cardParking = cardFeatures.querySelector('.popup__feature--parking');
+    var cardWasher = cardFeatures.querySelector('.popup__feature--washer');
+    var cardElevator = cardFeatures.querySelector('.popup__feature--elevator');
+    var cardConditioner = cardFeatures.querySelector('.popup__feature--conditioner');
 
+
+    // объект-мапа соответствия названия удобства и HTMLElementa
+    var featureLiMap = {
+      'wifi': cardWifi,
+      'dishwasher': cardDishwasher,
+      'parking': cardParking,
+      'washer': cardWasher,
+      'elevator': cardElevator,
+      'conditioner': cardConditioner
+    };
+
+    if (obj.offer.features && obj.offer.features.length > 0) {
+      Object.keys(featureLiMap).forEach(function (it) {
+        if (obj.offer.features.indexOf(it) === -1) {
+          featureLiMap[it].style.display = 'none';
+        }
+      });
+    } else {
+      cardFeatures.style.display = 'none';
+    }
 
     // блок с фото
     var photosList = card.querySelector('.popup__photos');
