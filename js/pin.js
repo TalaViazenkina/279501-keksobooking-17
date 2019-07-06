@@ -26,6 +26,11 @@
     newPinImg.src = obj.author.avatar;
     newPinImg.alt = obj.offer.title;
 
+    newPin.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      window.card.renderCard(obj);
+    });
+
     return newPin;
   };
 
@@ -46,11 +51,10 @@
 
       // запускаем отрисовку и добавляем метки в разметку
       var fragment = document.createDocumentFragment();
-      for (var i = 0; i < arr.length; i++) {
-        if (arr[i].offer) {
-          fragment.appendChild(getNewPin(arr[i]));
-        }
-      }
+      arr.forEach(function (it) {
+        fragment.appendChild(getNewPin(it));
+      });
+
       mapPinList.appendChild(fragment);
 
       isSimilarPin = true; // меняем флаг

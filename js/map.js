@@ -131,9 +131,12 @@
   };
 
   var onLoadSuccess = function (response) {
-    window.data.adsList = response;
+    // сохраним лишь те объявления, в которых есть offer
+    window.data.adsList = response.filter(function (it) {
+      return it.offer;
+    });
+
     window.pin.getNewPinList(window.data.adsList.slice(0, window.data.ADS_MAX_NUMBER));
-    window.card.renderCard(window.data.adsList[0]);
   };
 
 

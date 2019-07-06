@@ -37,10 +37,14 @@
   * @param {Event} evt
   */
   var closePopap = function () {
-    window.utils.MAP.removeChild(card);
+    card.remove();
     document.removeEventListener('keydown', onPopapEscPress);
   };
 
+  /**
+  * закрывает попап по esc
+  * @param {Event} evt
+  */
   var onPopapEscPress = function (evt) {
     evt.preventDefault();
     window.utils.isEscEvent(evt, closePopap);
@@ -51,8 +55,15 @@
   * @param {object} obj
   */
   var renderCard = function (obj) {
+    // удаляем карточку из разметки, если она уже была создана
+    if (card) {
+      closePopap();
+    }
+
+    // копируем шаблон
     card = cardTemplate.cloneNode(true);
 
+    // заполняем карточку
     // поле с заголовком
     var cardTitle = card.querySelector('.popup__title');
     fillField(cardTitle, obj.offer.title);
