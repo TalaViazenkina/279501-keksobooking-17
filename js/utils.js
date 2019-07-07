@@ -7,13 +7,6 @@
   */
   var ESC_KEYCODE = 27;
 
-  // шаблон сообщения об ошибке
-  var errorTemplate = document.querySelector('#error')
-  .content
-  .querySelector('.error');
-
-  var main = document.querySelector('main');
-
   window.utils = {
     MAP: document.querySelector('.map'), // карта
     adForm: document.querySelector('.ad-form'), // форма добавления объявлений
@@ -62,58 +55,6 @@
       if (evt.keyCode === ESC_KEYCODE) {
         action();
       }
-    },
-
-    /**
-    * ввыводит сообщение об ошибке
-    * @param {string} message
-    */
-    onError: function (message) {
-      var errorNode = errorTemplate.cloneNode(true); // клонируем шаблон
-      var errorText = errorNode.querySelector('.error__message');
-      errorText.textContent = message; // добавляем текст сообщения
-
-      // добавляем в разметку
-      main.insertAdjacentElement('afterbegin', errorNode);
-
-      /*
-      * удаляет сообщение об ошибке из DOM
-      * @param {event} evt
-      */
-      var closeError = function () {
-        errorNode.remove();
-        document.removeEventListener('click', onErrorClick);
-        document.removeEventListener('keydown', onErrorEscPress);
-      };
-
-      /**
-      * закрывает сообщение по клику на произвольную область
-      * @param {event} evt
-      */
-      var onErrorClick = function (evt) {
-        evt.preventDefault();
-        closeError();
-      };
-
-      /**
-      * закрывает сообщение по esc
-      * @param {event} evt
-      */
-      var onErrorEscPress = function (evt) {
-        evt.preventDefault();
-        if (evt.keyCode === ESC_KEYCODE) {
-          closeError();
-        }
-      };
-
-      var errorButton = errorNode.querySelector('.error__button');
-      // добавим обработчики событий для закрытия окна ошибки
-      errorButton.addEventListener('click', function (evt) {
-        evt.preventDefault();
-        closeError();
-      });
-      document.addEventListener('click', onErrorClick);
-      document.addEventListener('keydown', onErrorEscPress);
     }
   };
 })();

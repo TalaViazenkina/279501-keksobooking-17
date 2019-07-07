@@ -203,7 +203,7 @@
         enterCoordinate(); // записываем координаты в поле ввода в случае, если не было перемещения мыши
       }
       // запускаем отрисовку меток похожих объявлений
-      window.backend.load(onLoadSuccess, window.utils.onError);
+      window.backend.load(onLoadSuccess, window.error.onError);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);

@@ -73,4 +73,6 @@
   // при изменении значений полей Количество комнат или Количество гостей будем запускать проверку на соответствие между количеством гостей и комнат
   adFormRoom.addEventListener('change', onCapacityChange);
   adFormCapacity.addEventListener('change', onCapacityChange);
+
+  // отправка формы
 })();
