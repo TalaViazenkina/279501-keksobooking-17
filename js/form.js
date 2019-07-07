@@ -60,19 +60,14 @@
   * проверяет соответствие между количеством гостей и комнат
   */
   var onCapacityChange = function () {
+    var validityMessage;
     if (adFormRoom.value !== '100') {
-      if (adFormCapacity.value !== '0' && adFormCapacity.value <= adFormRoom.value) {
-        adFormCapacity.setCustomValidity('');
-      } else {
-        adFormCapacity.setCustomValidity('Для выбранного количества комнат укажите количество гостей отличное от 0, но не более ' + adFormRoom.value);
-      }
+      validityMessage = (adFormCapacity.value !== '0' && adFormCapacity.value <= adFormRoom.value) ? '' : 'Для выбранного количества комнат укажите количество гостей отличное от 0, но не более ' + adFormRoom.value;
     } else {
-      if (adFormCapacity.value !== '0') {
-        adFormCapacity.setCustomValidity('Для выбранного количества комнат возможное количество гостей  - 0');
-      } else {
-        adFormCapacity.setCustomValidity('');
-      }
+      validityMessage = (adFormCapacity.value !== '0') ? 'Для выбранного количества комнат возможное количество гостей  - 0' : '';
     }
+
+    adFormCapacity.setCustomValidity(validityMessage);
   };
 
   // при изменении значений полей Количество комнат или Количество гостей будем запускать проверку на соответствие между количеством гостей и комнат
