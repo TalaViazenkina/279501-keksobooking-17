@@ -178,7 +178,7 @@
     document.addEventListener('keydown', onPopapEscPress);
 
     // добавляем отрисованную карточку в разметку
-    window.utils.MAP.insertBefore(card, window.utils.MAP.querySelector('.map__filters-container'));
+    window.data.MAP.insertBefore(card, window.data.MAP.querySelector('.map__filters-container'));
   };
 
   window.card = {
