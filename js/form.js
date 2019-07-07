@@ -21,16 +21,6 @@
       adFormPrice.placeholder = objMap[adFormType.value];
     },
 
-    /**
-    * устанавливает допустимое количество густей в зависимости от количества комнат
-    */
-    getValidCapacity: function () {
-      if (adFormRoom.value === '100') {
-        adFormCapacity = '0';
-      } else {
-        adFormCapacity.value = adFormRoom.value;
-      }
-    }
   };
 
   adFormType.addEventListener('change', function () {
@@ -59,7 +49,7 @@
   /**
   * проверяет соответствие между количеством гостей и комнат
   */
-  var onCapacityChange = function () {
+  var checkCapacity = function () {
     var validityMessage;
     if (adFormRoom.value !== '100') {
       validityMessage = (adFormCapacity.value !== '0' && adFormCapacity.value <= adFormRoom.value) ? '' : 'Для выбранного количества комнат укажите количество гостей отличное от 0, но не более ' + adFormRoom.value;
@@ -70,9 +60,16 @@
     adFormCapacity.setCustomValidity(validityMessage);
   };
 
-  // при изменении значений полей Количество комнат или Количество гостей будем запускать проверку на соответствие между количеством гостей и комнат
-  adFormRoom.addEventListener('change', onCapacityChange);
-  adFormCapacity.addEventListener('change', onCapacityChange);
+  // запустим проверку на случай, если пользователь решит не менять значения этих полей
+  checkCapacity();
+
+  // при изменении значений полей Количество комнат или Количество гостей так же будем запускать проверку
+  adFormRoom.addEventListener('change', function () {
+    checkCapacity();
+  });
+  adFormCapacity.addEventListener('change', function () {
+    checkCapacity();
+  });
 
   // отправка формы
   window.utils.adForm.addEventListener('submit', function (evt) {

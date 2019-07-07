@@ -2,7 +2,7 @@
 
 // модуль отрисовки пинов на карте
 (function () {
-  var mapPinList = window.utils.MAP.querySelector('.map__pins'); // блок с метками
+  var mapPinList = window.data.MAP.querySelector('.map__pins'); // блок с метками
 
   var mapPinTemplate = document.querySelector('#pin') // шаблон метки
     .content

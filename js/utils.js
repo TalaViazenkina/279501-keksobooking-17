@@ -8,7 +8,7 @@
   var ESC_KEYCODE = 27;
 
   window.utils = {
-    MAP: document.querySelector('.map'), // карта
+
     adForm: document.querySelector('.ad-form'), // форма добавления объявлений
 
     /**

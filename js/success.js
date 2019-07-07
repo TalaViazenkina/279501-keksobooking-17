@@ -58,6 +58,11 @@
     window.utils.adForm.reset(); // сброс формы
     window.pin.clearPin();
     window.card.removeCard();
+    window.map.enterCoordinateInitial();
+
+    // передвигаем метку в центр
+    window.data.MAIN_PIN.style.top = window.data.MainPinInitial.Y + 'px';
+    window.data.MAIN_PIN.style.left = window.data.MainPinInitial.X + 'px';
 
   };
 
