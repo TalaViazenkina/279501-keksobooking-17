@@ -74,5 +74,20 @@
   adFormRoom.addEventListener('change', onCapacityChange);
   adFormCapacity.addEventListener('change', onCapacityChange);
 
+
+  var onSaveSuccess = function () {
+    console.log('Все гуд!');
+  };
+
   // отправка формы
+  window.utils.adForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+
+    // запускаем отправку данных на сервер только в том случае,
+    // если в данный момент никакая другая отправка не выполняется
+    if (!window.backend.isSaving) {
+      window.backend.isSaving = true;
+      window.backend.save(new FormData(window.utils.adForm), onSaveSuccess, window.error.onError);
+    }
+  });
 })();
