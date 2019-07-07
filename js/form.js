@@ -6,8 +6,10 @@
   // форма добавления объявлений
   var adFormType = window.utils.adForm.querySelector('#type'); // поле выбора типа жилья
   var adFormPrice = window.utils.adForm.querySelector('#price'); // поле ввода цены за ночь
-  var adFormTimeIn = window.utils.adForm.querySelector('#timein'); // поле ввода времени заезда
-  var adFormTimeOut = window.utils.adForm.querySelector('#timeout'); // поле ввода времени выезда
+  var adFormTimeIn = window.utils.adForm.querySelector('#timein'); // поле выбора времени заезда
+  var adFormTimeOut = window.utils.adForm.querySelector('#timeout'); // поле выбора времени выезда
+  var adFormRoom = window.utils.adForm.querySelector('#room_number'); // поле выбора количества комната
+  var adFormCapacity = window.utils.adForm.querySelector('#capacity'); // поле выбора количества гостей
 
   window.form = {
     /**
@@ -17,6 +19,17 @@
     getPrice: function (objMap) {
       adFormPrice.min = objMap[adFormType.value];
       adFormPrice.placeholder = objMap[adFormType.value];
+    },
+
+    /**
+    * устанавливает допустимое количество густей в зависимости от количества комнат
+    */
+    getValidCapacity: function () {
+      if (adFormRoom.value === '100') {
+        adFormCapacity = '0';
+      } else {
+        adFormCapacity.value = adFormRoom.value;
+      }
     }
   };
 
@@ -43,4 +56,26 @@
     getSimilarChoice(adFormTimeOut, adFormTimeIn);
   });
 
+  /**
+  * проверяет соответствие между количеством гостей и комнат
+  */
+  var onCapacityChange = function () {
+    if (adFormRoom.value !== '100') {
+      if (adFormCapacity.value !== '0' && adFormCapacity.value <= adFormRoom.value) {
+        adFormCapacity.setCustomValidity('');
+      } else {
+        adFormCapacity.setCustomValidity('Для выбранного количества комнат укажите количество гостей отличное от 0, но не более ' + adFormRoom.value);
+      }
+    } else {
+      if (adFormCapacity.value !== '0') {
+        adFormCapacity.setCustomValidity('Для выбранного количества комнат возможное количество гостей  - 0');
+      } else {
+        adFormCapacity.setCustomValidity('');
+      }
+    }
+  };
+
+  // при изменении значений полей Количество комнат или Количество гостей будем запускать проверку на соответствие между количеством гостей и комнат
+  adFormRoom.addEventListener('change', onCapacityChange);
+  adFormCapacity.addEventListener('change', onCapacityChange);
 })();

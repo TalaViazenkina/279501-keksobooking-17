@@ -105,8 +105,7 @@
     // передадим изначальные координаты метки в поле адреса
     enterCoordinateInitial();
 
-    // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
-    window.form.getPrice(window.data.typePriceMap);
+
 
     moveCount = 0; // обнуляем счетчик передвижения мыши
   };
@@ -128,6 +127,12 @@
     for (i = 0; i < adFormFieldsetsList.length; i++) {
       window.utils.removeDisabled(adFormFieldsetsList[i]);
     }
+
+    // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
+    window.form.getPrice(window.data.typePriceMap);
+
+    // зададим правильное количество гостей, для выбранного по умолчанию типа жилья
+    window.form.getValidCapacity();
   };
 
   var onLoadSuccess = function (response) {
