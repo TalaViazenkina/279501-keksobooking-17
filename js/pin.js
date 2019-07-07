@@ -37,16 +37,23 @@
 
   window.pin = {
     /**
+    * удаляет ранее отрисованные пины из разметки
+    */
+    clearPin: function () {
+      var pinsArray = Array.prototype.slice.call(mapPinList.querySelectorAll('.map__pin--similar'));
+      pinsArray.forEach(function (newPin) {
+        mapPinList.removeChild(newPin);
+      });
+    },
+
+    /**
     * добавляет в разметку необходимое количество DOM-элементов
     * @param {array} arr массив объектов на основании которого происходит наполнение шаблона
     */
     getNewPinList: function (arr) {
       // если метки уже отрисованы - удаляем их из разметки
       if (isSimilarPin) {
-        var pinsArray = Array.prototype.slice.call(mapPinList.querySelectorAll('.map__pin--similar'));
-        pinsArray.forEach(function (newPin) {
-          mapPinList.removeChild(newPin);
-        });
+        window.pin.clearPin();
       }
 
       // запускаем отрисовку и добавляем метки в разметку

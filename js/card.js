@@ -46,8 +46,16 @@
   * @param {Event} evt
   */
   var onPopapEscPress = function (evt) {
-    evt.preventDefault();
     window.utils.isEscEvent(evt, closePopap);
+  };
+
+  /**
+  * удаляет карточку из разметки, если она уже была создана
+  */
+  var removeCard = function () {
+    if (card) {
+      closePopap();
+    }
   };
 
   /**
@@ -55,10 +63,7 @@
   * @param {object} obj
   */
   var renderCard = function (obj) {
-    // удаляем карточку из разметки, если она уже была создана
-    if (card) {
-      closePopap();
-    }
+    removeCard();
 
     // копируем шаблон
     card = cardTemplate.cloneNode(true);
@@ -177,6 +182,7 @@
   };
 
   window.card = {
-    renderCard: renderCard
+    renderCard: renderCard,
+    removeCard: removeCard
   };
 })();

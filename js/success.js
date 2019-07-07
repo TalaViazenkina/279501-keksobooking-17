@@ -42,7 +42,7 @@
   * выводит сообщение об успешной отправке
   * @param {string} message
   */
-  var onSuccess = function () {
+  var renderSuccess = function () {
     successNode = successTemplate.cloneNode(true); // клонируем шаблон
 
     document.addEventListener('click', onSuccessClick);
@@ -50,6 +50,15 @@
 
     // добавляем в разметку
     main.insertAdjacentElement('afterbegin', successNode);
+  };
+
+  // все действия при успешной отправке
+  var onSuccess = function () {
+    renderSuccess(); // отрисовка сообщения
+    window.utils.adForm.reset(); // сброс формы
+    window.pin.clearPin();
+    window.card.removeCard();
+
   };
 
   window.success = {
