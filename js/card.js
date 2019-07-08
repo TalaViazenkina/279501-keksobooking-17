@@ -110,33 +110,30 @@
 
     //  поле с доступными удобствами
     var cardFeatures = card.querySelector('ul.popup__features');
-    var cardWifi = cardFeatures.querySelector('.popup__feature--wifi');
-    var cardDishwasher = cardFeatures.querySelector('.popup__feature--dishwasher');
-    var cardParking = cardFeatures.querySelector('.popup__feature--parking');
-    var cardWasher = cardFeatures.querySelector('.popup__feature--washer');
-    var cardElevator = cardFeatures.querySelector('.popup__feature--elevator');
-    var cardConditioner = cardFeatures.querySelector('.popup__feature--conditioner');
+    /**
+    * заполняет блок с доступными удобствами
+    */
+    var fillFeatures = function () {
+      // удаляем все элементы, описывающие удобства, из шаблона
+      var featuresArray = Array.prototype.slice.call(cardFeatures.querySelectorAll('.popup__feature'));
+      featuresArray.forEach(function (node) {
+        node.remove();
+      });
 
-
-    // объект-мапа соответствия названия удобства и HTMLElementa
-    var featureLiMap = {
-      'wifi': cardWifi,
-      'dishwasher': cardDishwasher,
-      'parking': cardParking,
-      'washer': cardWasher,
-      'elevator': cardElevator,
-      'conditioner': cardConditioner
+      // добавим только те удобства, что есть в объявлении
+      if (obj.offer.features && obj.offer.features.length > 0) {
+        obj.offer.features.forEach(function (it) {
+          var feature = document.createElement('li');
+          feature.classList.add('popup__feature');
+          feature.classList.add('popup__feature--' + it);
+          cardFeatures.appendChild(feature);
+        });
+      } else {
+        cardFeatures.style.display = 'none';
+      }
     };
 
-    if (obj.offer.features && obj.offer.features.length > 0) {
-      Object.keys(featureLiMap).forEach(function (it) {
-        if (obj.offer.features.indexOf(it) === -1) {
-          featureLiMap[it].style.display = 'none';
-        }
-      });
-    } else {
-      cardFeatures.style.display = 'none';
-    }
+    fillFeatures();
 
     // блок с фото
     var photosList = card.querySelector('.popup__photos');
