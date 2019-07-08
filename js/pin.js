@@ -28,7 +28,7 @@
 
     newPin.addEventListener('click', function (evt) {
       evt.preventDefault();
-      window.card.renderCard(obj);
+      window.card.render(obj);
     });
 
     return newPin;

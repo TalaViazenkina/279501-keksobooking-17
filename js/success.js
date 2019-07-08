@@ -57,7 +57,7 @@
     renderSuccess(); // отрисовка сообщения
     window.utils.adForm.reset(); // сброс формы
     window.pin.clearPin();
-    window.card.removeCard();
+    window.card.remove();
     window.map.enterCoordinateInitial();
 
     // передвигаем метку в центр
