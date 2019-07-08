@@ -2,7 +2,7 @@
 
 // модуль отрисовки пинов на карте
 (function () {
-  var mapPinList = window.utils.MAP.querySelector('.map__pins'); // блок с метками
+  var mapPinList = window.data.MAP.querySelector('.map__pins'); // блок с метками
 
   var mapPinTemplate = document.querySelector('#pin') // шаблон метки
     .content
@@ -26,35 +26,48 @@
     newPinImg.src = obj.author.avatar;
     newPinImg.alt = obj.offer.title;
 
+    newPin.addEventListener('click', function (evt) {
+      evt.preventDefault();
+      window.card.render(obj);
+    });
+
     return newPin;
+  };
+
+  /**
+  * удаляет ранее отрисованные пины из разметки
+  */
+  var clearPin = function () {
+    window.utils.deleteNodeList(mapPinList, '.map__pin--similar');
+  };
+
+
+  /**
+  * добавляет в разметку необходимое количество DOM-элементов
+  * @param {array} arr массив объектов на основании которого происходит наполнение шаблона
+  */
+  var getNewPinList = function (arr) {
+    // если метки уже отрисованы - удаляем их из разметки
+    if (isSimilarPin) {
+      window.pin.clear();
+    }
+
+    // запускаем отрисовку и добавляем метки в разметку
+    var fragment = document.createDocumentFragment();
+    arr.forEach(function (it) {
+      fragment.appendChild(getNewPin(it));
+    });
+
+    mapPinList.appendChild(fragment);
+
+    isSimilarPin = true; // меняем флаг
   };
 
 
   window.pin = {
-    /**
-    * добавляет в разметку необходимое количество DOM-элементов
-    * @param {array} arr массив объектов на основании которого происходит наполнение шаблона
-    */
-    getNewPinList: function (arr) {
-      // если метки уже отрисованы - удаляем их из разметки
-      if (isSimilarPin) {
-        var pinsArray = Array.prototype.slice.call(mapPinList.querySelectorAll('.map__pin--similar'));
-        pinsArray.forEach(function (newPin) {
-          mapPinList.removeChild(newPin);
-        });
-      }
+    clear: clearPin,
 
-      // запускаем отрисовку и добавляем метки в разметку
-      var fragment = document.createDocumentFragment();
-      for (var i = 0; i < arr.length; i++) {
-        if (arr[i].offer) {
-          fragment.appendChild(getNewPin(arr[i]));
-        }
-      }
-      mapPinList.appendChild(fragment);
-
-      isSimilarPin = true; // меняем флаг
-    }
+    render: getNewPinList
   };
 
 })();

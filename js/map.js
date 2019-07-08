@@ -2,15 +2,9 @@
 
 // модуль, отвечающий за активацию страницы при перетаскивании пина
 (function () {
-  var MAIN_PIN = window.utils.MAP.querySelector('.map__pin--main'); // главная метка
 
-  /**
-  * изначальные координаты "главного пина" в состоянии "круглая метка"
-  * @const
-  * @type {number}
-  */
-  var MAIN_PIN_COORDINATE_X = MAIN_PIN.offsetLeft + window.data.MAIN_PIN_SIZE / 2;
-  var MAIN_PIN_COORDINATE_Y = MAIN_PIN.offsetTop + window.data.MAIN_PIN_SIZE / 2;
+  // максимальная ширина карты (из CSS)ж
+  var MAP_MAX_WIDTH = 1200;
 
   /**
   * координата Y левого верхнего угла метки на карте, диапазон (для главной метки)
@@ -25,9 +19,9 @@
   * координата X левого верхнего угла метки на карте, диапазон (для главной метки)
   * @enum {number}
   */
-  var LocationX = {
+  var locationX = {
     MIN: 0,
-    MAX: window.utils.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH
+    max: window.data.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH
   };
 
   // форма подачи объявления
@@ -44,14 +38,24 @@
   * заполняет поле изначальными координатами метки
   */
   var enterCoordinateInitial = function () {
-    adFormAddress.value = MAIN_PIN_COORDINATE_X + ', ' + MAIN_PIN_COORDINATE_Y;
+    adFormAddress.value = (window.data.MainPinInitial.X + window.data.MAIN_PIN_SIZE / 2) + ', ' + (window.data.MainPinInitial.Y + window.data.MAIN_PIN_SIZE / 2);
+  };
+
+  /**
+  * перерасчитывает максимальную координату x метки при изменении ширины окна браузера
+  */
+  var updateCoordinate = function () {
+    if (window.data.MAP.offsetWidth < MAP_MAX_WIDTH) {
+      locationX.max = window.data.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH;
+    }
+
   };
 
   /**
   * заполняет поле координатами передвинутой метки
   */
   var enterCoordinate = function () {
-    adFormAddress.value = (MAIN_PIN.offsetLeft + window.data.MAIN_PIN_WIDTH / 2) + ', ' + (MAIN_PIN.offsetTop + window.data.MAIN_PIN_HEIGHT);
+    adFormAddress.value = (window.data.MAIN_PIN.offsetLeft + window.data.MAIN_PIN_WIDTH / 2) + ', ' + (window.data.MAIN_PIN.offsetTop + window.data.MAIN_PIN_HEIGHT);
   };
 
   /** сравнивает полученную координату с заданным диапазоном
@@ -92,9 +96,6 @@
     // передадим изначальные координаты метки в поле адреса
     enterCoordinateInitial();
 
-    // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
-    window.form.getPrice(window.data.typePriceMap);
-
     moveCount = 0; // обнуляем счетчик передвижения мыши
   };
 
@@ -102,7 +103,7 @@
   * активирует страницу
   */
   var activatePage = function () {
-    window.utils.MAP.classList.remove('map--faded');
+    window.data.MAP.classList.remove('map--faded');
     window.utils.adForm.classList.remove('ad-form--disabled');
 
     // удаляем со всех элементов управления формой атрибут disabled
@@ -115,19 +116,31 @@
     for (i = 0; i < adFormFieldsetsList.length; i++) {
       window.utils.removeDisabled(adFormFieldsetsList[i]);
     }
+
+    // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
+    window.form.getPrice(window.data.typePriceMap);
+
   };
 
   var onLoadSuccess = function (response) {
-    window.data.adsList = response;
-    window.pin.getNewPinList(window.data.adsList.slice(0, window.data.ADS_MAX_NUMBER));
+    // сохраним лишь те объявления, в которых есть offer
+    window.data.adsList = response.filter(function (it) {
+      return it.offer;
+    });
+
+    window.pin.render(window.data.adsList.slice(0, window.data.ADS_MAX_NUMBER));
   };
 
 
   // дезактивация страницы
   desactivatePage();
 
+  window.addEventListener('resize', function () {
+    window.debounce(updateCoordinate);
+  });
+
   // перемещение главной метки
-  MAIN_PIN.addEventListener('mousedown', function (evt) {
+  window.data.MAIN_PIN.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     moveCount += 1;
 
@@ -159,8 +172,8 @@
       };
 
       // задаем новые координаты для метки в стили
-      MAIN_PIN.style.top = checkCoord(MAIN_PIN.offsetTop, shift.y, LocationY.MIN, LocationY.MAX) + 'px'; // y
-      MAIN_PIN.style.left = checkCoord(MAIN_PIN.offsetLeft, shift.x, LocationX.MIN, LocationX.MAX) + 'px'; // x
+      window.data.MAIN_PIN.style.top = checkCoord(window.data.MAIN_PIN.offsetTop, shift.y, LocationY.MIN, LocationY.MAX) + 'px'; // y
+      window.data.MAIN_PIN.style.left = checkCoord(window.data.MAIN_PIN.offsetLeft, shift.x, locationX.MIN, locationX.max) + 'px'; // x
 
       // записываем измененные координаты в поле ввода
       enterCoordinate();
@@ -179,7 +192,7 @@
         enterCoordinate(); // записываем координаты в поле ввода в случае, если не было перемещения мыши
       }
       // запускаем отрисовку меток похожих объявлений
-      window.backend.load(onLoadSuccess, window.utils.onError);
+      window.backend.load(onLoadSuccess, window.error);
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
@@ -190,5 +203,9 @@
     document.addEventListener('mouseup', onMouseUp);
 
   });
+
+  window.map = {
+    enterCoordinateInitial: enterCoordinateInitial
+  };
 
 })();

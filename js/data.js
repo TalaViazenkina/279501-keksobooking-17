@@ -2,7 +2,12 @@
 
 // модуль с исходными параметрами и данными
 (function () {
+  var MAP = document.querySelector('.map');
+  var MAIN_PIN = MAP.querySelector('.map__pin--main'); // главная метка
+
   window.data = {
+    MAP: MAP,
+    MAIN_PIN: MAIN_PIN,
     ADS_MAX_NUMBER: 5, // максимальное количество похожих объявлений, отображаемое на карте
     /**
     * тип недвижимости
@@ -42,6 +47,11 @@
     */
     MAIN_PIN_SIZE: 65,
 
+    // начальные координаты главной метки
+    MainPinInitial: {
+      X: MAIN_PIN.offsetLeft,
+      Y: MAIN_PIN.offsetTop
+    },
 
     // создадим объект-мапу для хранения зависимости минимальной стоимости от типа жилья
     typePriceMap: {

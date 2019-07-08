@@ -3,7 +3,7 @@
 // модуль фильтрации объявлений
 (function () {
   window.filters = {
-    form: window.utils.MAP.querySelector('.map__filters') // форма с фильтрами
+    form: window.data.MAP.querySelector('.map__filters') // форма с фильтрами
   };
 
   var selectType = window.filters.form.querySelector('select[name=housing-type]'); // фильтр типа жилья
@@ -24,7 +24,7 @@
   * запускает отрисовку отфильтрованных объявлений
   */
   var updateAdsList = function () {
-    window.pin.getNewPinList(filteredData.slice(0, window.data.ADS_MAX_NUMBER));
+    window.pin.render(filteredData.slice(0, window.data.ADS_MAX_NUMBER));
   };
 
 
@@ -78,7 +78,7 @@
     if (selectedPriceValue === unselectedValue) {
       return true;
     } else if (selectedPriceValue === 'high') {
-      return it.offer.price >= priceNumberMap.hight;
+      return it.offer.price >= priceNumberMap[selectedPriceValue];
     }
     return it.offer.price >= priceNumberMap[selectedPriceValue].min
     && it.offer.price < priceNumberMap[selectedPriceValue].max;
