@@ -56,7 +56,7 @@
   var onSuccess = function () {
     renderSuccess(); // отрисовка сообщения
     window.utils.adForm.reset(); // сброс формы
-    window.pin.clearPin();
+    window.pin.clear();
     window.card.remove();
     window.map.enterCoordinateInitial();
 

@@ -34,36 +34,40 @@
     return newPin;
   };
 
+  /**
+  * удаляет ранее отрисованные пины из разметки
+  */
+  var clearPin = function () {
+    window.utils.deleteNodeList(mapPinList, '.map__pin--similar');
+  };
+
+
+  /**
+  * добавляет в разметку необходимое количество DOM-элементов
+  * @param {array} arr массив объектов на основании которого происходит наполнение шаблона
+  */
+  var getNewPinList = function (arr) {
+    // если метки уже отрисованы - удаляем их из разметки
+    if (isSimilarPin) {
+      window.pin.clear();
+    }
+
+    // запускаем отрисовку и добавляем метки в разметку
+    var fragment = document.createDocumentFragment();
+    arr.forEach(function (it) {
+      fragment.appendChild(getNewPin(it));
+    });
+
+    mapPinList.appendChild(fragment);
+
+    isSimilarPin = true; // меняем флаг
+  };
+
 
   window.pin = {
-    /**
-    * удаляет ранее отрисованные пины из разметки
-    */
-    clearPin: function () {
-      window.utils.deleteNodeList(mapPinList, '.map__pin--similar');
-    },
+    clear: clearPin,
 
-
-    /**
-    * добавляет в разметку необходимое количество DOM-элементов
-    * @param {array} arr массив объектов на основании которого происходит наполнение шаблона
-    */
-    getNewPinList: function (arr) {
-      // если метки уже отрисованы - удаляем их из разметки
-      if (isSimilarPin) {
-        window.pin.clearPin();
-      }
-
-      // запускаем отрисовку и добавляем метки в разметку
-      var fragment = document.createDocumentFragment();
-      arr.forEach(function (it) {
-        fragment.appendChild(getNewPin(it));
-      });
-
-      mapPinList.appendChild(fragment);
-
-      isSimilarPin = true; // меняем флаг
-    }
+    render: getNewPinList
   };
 
 })();

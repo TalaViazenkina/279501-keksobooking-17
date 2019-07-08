@@ -24,7 +24,7 @@
   * запускает отрисовку отфильтрованных объявлений
   */
   var updateAdsList = function () {
-    window.pin.getNewPinList(filteredData.slice(0, window.data.ADS_MAX_NUMBER));
+    window.pin.render(filteredData.slice(0, window.data.ADS_MAX_NUMBER));
   };
 
 

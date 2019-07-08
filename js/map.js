@@ -128,7 +128,7 @@
       return it.offer;
     });
 
-    window.pin.getNewPinList(window.data.adsList.slice(0, window.data.ADS_MAX_NUMBER));
+    window.pin.render(window.data.adsList.slice(0, window.data.ADS_MAX_NUMBER));
   };
 
 
