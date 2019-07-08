@@ -78,7 +78,7 @@
     if (selectedPriceValue === unselectedValue) {
       return true;
     } else if (selectedPriceValue === 'high') {
-      return it.offer.price >= priceNumberMap.hight;
+      return it.offer.price >= priceNumberMap[selectedPriceValue];
     }
     return it.offer.price >= priceNumberMap[selectedPriceValue].min
     && it.offer.price < priceNumberMap[selectedPriceValue].max;
