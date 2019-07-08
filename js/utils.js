@@ -47,6 +47,19 @@
     },
 
     /**
+    * Возвращает список элементов, а затем удаляет их из DOM
+    * @param {Element} parentEl
+    * @param {string} selectors
+    */
+
+    deleteNodeList: function (parentEl, selectors) {
+      var nodeArray = Array.prototype.slice.call(parentEl.querySelectorAll(selectors));
+      nodeArray.forEach(function (node) {
+        node.remove();
+      });
+    },
+
+    /**
     * проверяет, был ли нажат esc
     * @param {event} evt
     * @param {function} action

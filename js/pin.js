@@ -40,11 +40,9 @@
     * удаляет ранее отрисованные пины из разметки
     */
     clearPin: function () {
-      var pinsArray = Array.prototype.slice.call(mapPinList.querySelectorAll('.map__pin--similar'));
-      pinsArray.forEach(function (newPin) {
-        mapPinList.removeChild(newPin);
-      });
+      window.utils.deleteNodeList(mapPinList, '.map__pin--similar');
     },
+
 
     /**
     * добавляет в разметку необходимое количество DOM-элементов

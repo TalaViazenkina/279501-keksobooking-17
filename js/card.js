@@ -115,10 +115,7 @@
     */
     var fillFeatures = function () {
       // удаляем все элементы, описывающие удобства, из шаблона
-      var featuresArray = Array.prototype.slice.call(cardFeatures.querySelectorAll('.popup__feature'));
-      featuresArray.forEach(function (node) {
-        node.remove();
-      });
+      window.utils.deleteNodeList(cardFeatures, '.popup__feature');
 
       // добавим только те удобства, что есть в объявлении
       if (obj.offer.features && obj.offer.features.length > 0) {
