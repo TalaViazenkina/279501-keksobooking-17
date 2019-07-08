@@ -60,7 +60,6 @@
     main.insertAdjacentElement('afterbegin', errorNode);
   };
 
-  window.error = {
-    onError: onError
-  };
+  window.error = onError;
+
 })();

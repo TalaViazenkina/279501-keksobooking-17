@@ -66,7 +66,5 @@
 
   };
 
-  window.success = {
-    onSaveSuccess: onSuccess
-  };
+  window.success = onSuccess;
 })();

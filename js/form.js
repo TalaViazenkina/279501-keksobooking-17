@@ -79,7 +79,7 @@
     // если в данный момент никакая другая отправка не выполняется
     if (!window.backend.isSaving) {
       window.backend.isSaving = true;
-      window.backend.save(new FormData(window.utils.adForm), window.success.onSaveSuccess, window.error.onError);
+      window.backend.save(new FormData(window.utils.adForm), window.success, window.error);
     }
   });
 })();
