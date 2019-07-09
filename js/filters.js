@@ -123,6 +123,9 @@
   // добавим обработчик события change на всю форму,
   // а выбранный фильтр будем отслеживать по evt.target
   window.filters.form.addEventListener('change', function (evt) {
+    // удалим карточку объявления
+    window.card.remove();
+
     // запишем значение выбранного фильтра в соответствующую переменную
     nameSelectedValueMap[evt.target.name](evt.target.value);
 
