@@ -136,7 +136,7 @@
   */
 
   var checkFeatures = function (input, it) {
-    if (input.checked !== true) {
+    if (!input.checked) {
       return true;
     }
     return it.offer.features.indexOf(input.value) !== -1;
