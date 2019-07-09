@@ -11,6 +11,15 @@
   var selectRoom = window.filters.form.querySelector('select[name=housing-rooms]'); // фильтр количества комнат
   var selectGuest = window.filters.form.querySelector('select[name=housing-guests]'); // фильтр гостей
 
+  // фильтры удобств
+  var wifi = window.filters.form.querySelector('#filter-wifi');
+  var dishwasher = window.filters.form.querySelector('#filter-dishwasher');
+  var parking = window.filters.form.querySelector('#filter-parking');
+  var washer = window.filters.form.querySelector('#filter-washer');
+  var elevator = window.filters.form.querySelector('#filter-elevator');
+  var conditioner = window.filters.form.querySelector('#filter-conditioner');
+
+
   // переменные для хранения текущего значения выбранного фильтра
   // зададим "стартовое" значение
   var selectedTypeValue = selectType.value;
@@ -119,6 +128,20 @@
     return it.offer.guests.toString() === selectedGuestValue;
   };
 
+  /**
+  * проверяет выбранные удобства
+  * @param {HTMLInputElement} input
+  * @param {Object} it
+  * @return {boolean}
+  */
+
+  var checkFeatures = function (input, it) {
+    if (input.checked !== true) {
+      return true;
+    }
+    return it.offer.features.indexOf(input.value) !== -1;
+  };
+
 
   // добавим обработчик события change на всю форму,
   // а выбранный фильтр будем отслеживать по evt.target
@@ -126,12 +149,14 @@
     // удалим карточку объявления
     window.card.remove();
 
-    // запишем значение выбранного фильтра в соответствующую переменную
-    nameSelectedValueMap[evt.target.name](evt.target.value);
+    if (evt.target.name !== 'features') {
+      // запишем значение выбранного фильтра в соответствующую переменную
+      nameSelectedValueMap[evt.target.name](evt.target.value);
+    }
 
     // отфильтруем данные
     filteredData = window.data.adsList.filter(function (ad) {
-      return checkTypeValue(ad) && checkPriceValue(ad) && checkRoomValue(ad) && checkGuestValue(ad);
+      return checkTypeValue(ad) && checkPriceValue(ad) && checkRoomValue(ad) && checkGuestValue(ad) && checkFeatures(wifi, ad) && checkFeatures(dishwasher, ad) && checkFeatures(parking, ad) && checkFeatures(washer, ad) && checkFeatures(elevator, ad) && checkFeatures(conditioner, ad);
     });
 
     // запустим отрисовку отфильтрованных меток
