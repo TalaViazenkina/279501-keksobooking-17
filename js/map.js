@@ -107,19 +107,12 @@
     window.utils.adForm.classList.remove('ad-form--disabled');
 
     // удаляем со всех элементов управления формой атрибут disabled
-    window.utils.removeDisabled(mapFiltersFieldset);
-
-    for (var i = 0; i < mapFiltersSelectsList.length; i++) {
-      window.utils.removeDisabled(mapFiltersSelectsList[i]);
-    }
-
-    for (i = 0; i < adFormFieldsetsList.length; i++) {
+    for (var i = 0; i < adFormFieldsetsList.length; i++) {
       window.utils.removeDisabled(adFormFieldsetsList[i]);
     }
 
     // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
     window.form.getPrice(window.data.typePriceMap);
-
   };
 
   var onLoadSuccess = function (response) {
@@ -127,8 +120,13 @@
     window.data.adsList = response.filter(function (it) {
       return it.offer;
     });
-
+    // запустим отрисовку меток
     window.pin.render(window.data.adsList.slice(0, window.data.ADS_MAX_NUMBER));
+    // разблокируем форму с фильтрами
+    window.utils.removeDisabled(mapFiltersFieldset);
+    for (var i = 0; i < mapFiltersSelectsList.length; i++) {
+      window.utils.removeDisabled(mapFiltersSelectsList[i]);
+    }
   };
 
 
