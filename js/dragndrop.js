@@ -10,9 +10,8 @@
 
   var avatarFile;
 
-  avatarChooser.addEventListener('change', function () {
-    avatarFile = avatarChooser.files[0];
-    var fileName = avatarFile.name.toLowerCase();
+  var renderPreview = function (file) {
+    var fileName = file.name.toLowerCase();
 
     var matches = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
@@ -25,8 +24,14 @@
         avatar.src = reader.result;
       });
 
-      reader.readAsDataURL(avatarFile);
+      reader.readAsDataURL(file);
     }
+  };
+
+  avatarChooser.addEventListener('change', function () {
+    avatarFile = avatarChooser.files[0];
+
+    renderPreview(avatarFile);
 
   });
 
@@ -78,22 +83,7 @@
     var dt = evt.dataTransfer;
     avatarFile = dt.files[0];
 
-    var fileName = avatarFile.name.toLowerCase();
-
-    var matches = FILE_TYPES.some(function (it) {
-      return fileName.endsWith(it);
-    });
-
-    if (matches) {
-      var reader = new FileReader();
-
-      reader.addEventListener('load', function () {
-        avatar.src = reader.result;
-      });
-
-      reader.readAsDataURL(avatarFile);
-
-    }
+    renderPreview(avatarFile);
 
   });
 
