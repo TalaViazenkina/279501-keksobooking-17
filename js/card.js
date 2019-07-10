@@ -151,6 +151,9 @@
   var closePopap = function () {
     card.remove();
     document.removeEventListener('keydown', onPopapEscPress);
+    if (window.data.MAP.querySelector('.map__pin--active')) {
+      window.data.MAP.querySelector('.map__pin--active').classList.remove('map__pin--active');
+    }
   };
 
   /**

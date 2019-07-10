@@ -11,6 +11,8 @@
   var adFormRoom = window.utils.adForm.querySelector('#room_number'); // поле выбора количества комната
   var adFormCapacity = window.utils.adForm.querySelector('#capacity'); // поле выбора количества гостей
 
+  var resetButton = window.utils.adForm.querySelector('button[type=reset]'); // кнопка сброса
+
   window.form = {
     /**
     * устанавливает минимальное значение поля «Цена за ночь» в зависимости от типа жилья
@@ -82,4 +84,19 @@
       window.backend.save(new FormData(window.utils.adForm), window.success, window.error);
     }
   });
+
+  // ресет формы
+  resetButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+
+    window.utils.adForm.reset();
+    window.pin.clear();
+    window.card.remove();
+    window.map.enterCoordinateInitial();
+
+    // передвигаем метку в центр
+    window.data.MAIN_PIN.style.top = window.data.MainPinInitial.Y + 'px';
+    window.data.MAIN_PIN.style.left = window.data.MainPinInitial.X + 'px';
+  });
+
 })();

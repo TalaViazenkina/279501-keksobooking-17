@@ -29,6 +29,7 @@
     newPin.addEventListener('click', function (evt) {
       evt.preventDefault();
       window.card.render(obj);
+      newPin.classList.add('map__pin--active');
     });
 
     return newPin;
