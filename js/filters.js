@@ -156,7 +156,16 @@
 
     // отфильтруем данные
     filteredData = window.data.adsList.filter(function (ad) {
-      return checkTypeValue(ad) && checkPriceValue(ad) && checkRoomValue(ad) && checkGuestValue(ad) && checkFeatures(wifi, ad) && checkFeatures(dishwasher, ad) && checkFeatures(parking, ad) && checkFeatures(washer, ad) && checkFeatures(elevator, ad) && checkFeatures(conditioner, ad);
+      return checkTypeValue(ad) &&
+            checkPriceValue(ad) &&
+            checkRoomValue(ad) &&
+            checkGuestValue(ad) &&
+            checkFeatures(wifi, ad) &&
+            checkFeatures(dishwasher, ad) &&
+            checkFeatures(parking, ad) &&
+            checkFeatures(washer, ad) &&
+            checkFeatures(elevator, ad) &&
+            checkFeatures(conditioner, ad);
     });
 
     // запустим отрисовку отфильтрованных меток

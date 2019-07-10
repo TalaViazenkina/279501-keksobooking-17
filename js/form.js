@@ -11,6 +11,8 @@
   var adFormRoom = window.utils.adForm.querySelector('#room_number'); // поле выбора количества комната
   var adFormCapacity = window.utils.adForm.querySelector('#capacity'); // поле выбора количества гостей
 
+  var resetButton = window.utils.adForm.querySelector('button[type=reset]'); // кнопка сброса
+
   window.form = {
     /**
     * устанавливает минимальное значение поля «Цена за ночь» в зависимости от типа жилья
@@ -84,7 +86,7 @@
   });
 
   // ресет формы
-  window.utils.adForm.addEventListener('reset', function (evt) {
+  resetButton.addEventListener('click', function (evt) {
     evt.preventDefault();
 
     window.utils.adForm.reset();
