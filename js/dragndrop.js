@@ -1,16 +1,18 @@
 'use strict';
 
-// модуль загрузки аватарки
+// модуль загрузки файлов в форму
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png']; // допустимые расширения файлов
 
-  var avatarChooser = window.utils.adForm.querySelector('.ad-form__field input'); // поле загрузки аватарки
+  var avatarChooser = window.utils.adForm.querySelector('#avatar'); // поле загрузки аватарки
   var avatar = window.utils.adForm.querySelector('.ad-form-header__preview img');
   var dropZone = window.utils.adForm.querySelector('.ad-form-header__drop-zone');
 
+  var avatarFile;
+
   avatarChooser.addEventListener('change', function () {
-    var file = avatarChooser.files[0];
-    var fileName = file.name.toLowerCase();
+    avatarFile = avatarChooser.files[0];
+    var fileName = avatarFile.name.toLowerCase();
 
     var matches = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
@@ -23,7 +25,7 @@
         avatar.src = reader.result;
       });
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(avatarFile);
     }
 
   });
@@ -70,12 +72,13 @@
   dropZone.addEventListener('drop', function (evt) {
     preventDefaults(evt);
     unhighlight();
+    // сохраняем "перетянутые" файлы в свойство .files инпута
+    avatarChooser.files = evt.dataTransfer.files;
 
     var dt = evt.dataTransfer;
-    console.log(dt.files);
-    var file = dt.files[0];
+    avatarFile = dt.files[0];
 
-    var fileName = file.name.toLowerCase();
+    var fileName = avatarFile.name.toLowerCase();
 
     var matches = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
@@ -88,12 +91,10 @@
         avatar.src = reader.result;
       });
 
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(avatarFile);
+
     }
 
-
   });
-
-
 
 })();
