@@ -6,11 +6,17 @@
 
   var avatarChooser = window.utils.adForm.querySelector('#avatar'); // поле загрузки аватарки
   var avatar = window.utils.adForm.querySelector('.ad-form-header__preview img');
-  var dropZone = window.utils.adForm.querySelector('.ad-form-header__drop-zone');
+  var avatarDropZone = window.utils.adForm.querySelector('.ad-form-header__drop-zone');
+
+  var photoChooser = window.utils.adForm.querySelector('#images'); // поле загрузки аватарки
+  var photo = window.utils.adForm.querySelector('.ad-form__photo');
+  var photoDropZone = window.utils.adForm.querySelector('.ad-form__drop-zone');
+  var photoContainer = window.utils.adForm.querySelector('.ad-form__photo-container');
 
   var avatarFile;
+  var photoFile;
 
-  var renderPreview = function (file) {
+  var renderPreview = function (file, preview) {
     var fileName = file.name.toLowerCase();
 
     var matches = FILE_TYPES.some(function (it) {
@@ -21,19 +27,13 @@
       var reader = new FileReader();
 
       reader.addEventListener('load', function () {
-        avatar.src = reader.result;
+        preview.src = reader.result;
       });
 
       reader.readAsDataURL(file);
     }
   };
 
-  avatarChooser.addEventListener('change', function () {
-    avatarFile = avatarChooser.files[0];
-
-    renderPreview(avatarFile);
-
-  });
 
   /**
   * запрещает события по умолчанию
@@ -46,45 +46,122 @@
 
   /**
   * изменяет цвет границы
+  * @param {HTMLElement} dropZone
   */
-  var highlight = function () {
+  var highlight = function (dropZone) {
     dropZone.style.borderColor = '#ff5635';
   };
 
   /**
   * изменяет цвет границы (на первоначальный)
+  * @param {HTMLElement} dropZone
   */
-  var unhighlight = function () {
+  var unhighlight = function (dropZone) {
     dropZone.style.borderColor = '#c7c7c7';
   };
 
-  dropZone.addEventListener('dragenter', function (evt) {
-    preventDefaults(evt);
-    highlight();
+
+  // добавление аватарки автора
+  avatarChooser.addEventListener('change', function () {
+    avatarFile = avatarChooser.files[0];
+
+    renderPreview(avatarFile, avatar);
   });
 
-  dropZone.addEventListener('dragover', function (evt) {
+  avatarDropZone.addEventListener('dragenter', function (evt) {
     preventDefaults(evt);
-    highlight();
+    highlight(avatarDropZone);
+  });
+
+  avatarDropZone.addEventListener('dragover', function (evt) {
+    preventDefaults(evt);
+    highlight(avatarDropZone);
     evt.dataTransfer.dropEffect = 'copy';
   });
 
-  dropZone.addEventListener('dragleave', function (evt) {
+  avatarDropZone.addEventListener('dragleave', function (evt) {
     preventDefaults(evt);
-    unhighlight();
+    unhighlight(avatarDropZone);
   });
 
-  dropZone.addEventListener('drop', function (evt) {
+  avatarDropZone.addEventListener('drop', function (evt) {
     preventDefaults(evt);
-    unhighlight();
+    unhighlight(avatarDropZone);
     // сохраняем "перетянутые" файлы в свойство .files инпута
     avatarChooser.files = evt.dataTransfer.files;
 
     var dt = evt.dataTransfer;
     avatarFile = dt.files[0];
 
-    renderPreview(avatarFile);
+    renderPreview(avatarFile, avatar);
+  });
+
+
+  // добавление фотографий жилья
+  photoChooser.addEventListener('change', function () {
+    var fragment = document.createDocumentFragment();
+    var image = document.createElement('img');
+    image.width = 70;
+    image.height = 70;
+    photo.appendChild(image);
+
+    var photoFiles = Array.prototype.slice.call(photoChooser.files);
+    photoFiles.forEach(function (file, index) {
+      if (index === 0) {
+        renderPreview(file, image);
+      } else {
+        var photoBox = photo.cloneNode(true);
+        var photoBoxImage = photoBox.querySelector('img');
+        renderPreview(file, photoBoxImage);
+        fragment.appendChild(photoBox);
+      }
+    });
+    photoContainer.appendChild(fragment);
+  });
+
+  photoDropZone.addEventListener('dragenter', function (evt) {
+    preventDefaults(evt);
+    highlight(photoDropZone);
+  });
+
+  photoDropZone.addEventListener('dragover', function (evt) {
+    preventDefaults(evt);
+    highlight(photoDropZone);
+    evt.dataTransfer.dropEffect = 'copy';
+  });
+
+  photoDropZone.addEventListener('dragleave', function (evt) {
+    preventDefaults(evt);
+    unhighlight(photoDropZone);
+  });
+
+  photoDropZone.addEventListener('drop', function (evt) {
+    preventDefaults(evt);
+    unhighlight(photoDropZone);
+    // сохраняем "перетянутые" файлы в свойство .files инпута
+    photoChooser.files = evt.dataTransfer.files;
+
+    var photoFiles = Array.prototype.slice.call(evt.dataTransfer.files);
+
+    var fragment = document.createDocumentFragment();
+    var image = document.createElement('img');
+    image.width = 70;
+    image.height = 70;
+    photo.appendChild(image);
+
+    photoFiles.forEach(function (file, index) {
+      if (index === 0) {
+        renderPreview(file, image);
+      } else {
+        var photoBox = photo.cloneNode(true);
+        var photoBoxImage = photoBox.querySelector('img');
+        renderPreview(file, photoBoxImage);
+        fragment.appendChild(photoBox);
+      }
+    });
+    photoContainer.appendChild(fragment);
 
   });
+
 
 })();
