@@ -5,31 +5,39 @@
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png']; // допустимые расширения файлов
 
   var avatarChooser = window.utils.adForm.querySelector('#avatar'); // поле загрузки аватарки
-  var avatar = window.utils.adForm.querySelector('.ad-form-header__preview img');
-  var avatarDropZone = window.utils.adForm.querySelector('.ad-form-header__drop-zone');
+  var avatar = window.utils.adForm.querySelector('.ad-form-header__preview img'); // поле отображения аватара
+  var avatarDropZone = window.utils.adForm.querySelector('.ad-form-header__drop-zone'); // зона, на которую осуществляется перетаскивание
+  var avatarInitial = avatar.src; // адрес аватарки по умолчанию
 
-  var photoChooser = window.utils.adForm.querySelector('#images'); // поле загрузки аватарки
-  var photo = window.utils.adForm.querySelector('.ad-form__photo');
-  var photoDropZone = window.utils.adForm.querySelector('.ad-form__drop-zone');
-  var photoContainer = window.utils.adForm.querySelector('.ad-form__photo-container');
+  var photoChooser = window.utils.adForm.querySelector('#images'); // поле загрузки фото
+  var photo = window.utils.adForm.querySelector('.ad-form__photo'); // блок в котором отображается фото
+  var photoDropZone = window.utils.adForm.querySelector('.ad-form__drop-zone'); // зона, на которую осуществляется перетаскивание
+  var photoContainer = window.utils.adForm.querySelector('.ad-form__photo-container'); // контейнер с фотографиями
 
-  var avatarFile;
-  var photoFile;
+  /**
+  * меняет аватарку на аватарку по умолчанию
+  */
+  var clearAvatar = function () {
+    avatar.src = avatarInitial;
+  };
 
+  /**
+  * отрисовывает превью файла
+  * @param {File} file;
+  * @param {HTMLImageElement} preview
+  */
   var renderPreview = function (file, preview) {
     var fileName = file.name.toLowerCase();
-
+    // по расширению файла проверяем, является ли выбранный файл изображением
     var matches = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
     });
-
+    // если файл прошел проверку, с помощью FileReader записываем его в кодировке Base:64 в src
     if (matches) {
       var reader = new FileReader();
-
       reader.addEventListener('load', function () {
         preview.src = reader.result;
       });
-
       reader.readAsDataURL(file);
     }
   };
@@ -92,12 +100,13 @@
 
 
   // добавление аватарки автора
+  // через окно диалога выбора файла
   avatarChooser.addEventListener('change', function () {
-    avatarFile = avatarChooser.files[0];
-
+    var avatarFile = avatarChooser.files[0];
     renderPreview(avatarFile, avatar);
   });
 
+  // с помощью drag-n-drop
   avatarDropZone.addEventListener('dragenter', function (evt) {
     preventDefaults(evt);
     highlight(avatarDropZone);
@@ -120,18 +129,18 @@
     // сохраняем "перетянутые" файлы в свойство .files инпута
     avatarChooser.files = evt.dataTransfer.files;
 
-    var dt = evt.dataTransfer;
-    avatarFile = dt.files[0];
-
+    var avatarFile = evt.dataTransfer.files[0];
     renderPreview(avatarFile, avatar);
   });
 
 
   // добавление фотографий жилья
+  // через окно диалога выбора файла
   photoChooser.addEventListener('change', function () {
     renderMultipleFiles(photoChooser.files);
   });
 
+  // с помощью drag-n-drop
   photoDropZone.addEventListener('dragenter', function (evt) {
     preventDefaults(evt);
     highlight(photoDropZone);
@@ -157,5 +166,7 @@
     renderMultipleFiles(evt.dataTransfer.files);
   });
 
-
+  window.attachment = {
+    clearAvatar: clearAvatar
+  };
 })();
