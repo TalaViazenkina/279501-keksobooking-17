@@ -17,6 +17,7 @@
   var isAttachedFiles; // флаг, показывающий, что были добавлены фотографии
 
   var avatarFile;
+  var photoFile;
 
   /**
   * меняет аватарку на аватарку по умолчанию
@@ -79,6 +80,7 @@
 
     // переводим FileList в массив
     var fileArray = Array.prototype.slice.call(fileList);
+    window.attachment.photoFile = fileArray;
 
     fileArray.forEach(function (file, index) {
       if (index === 0) {
@@ -133,6 +135,7 @@
   avatarChooser.addEventListener('change', function () {
     avatarFile = avatarChooser.files[0];
     renderPreview(avatarFile, avatar);
+
   });
 
   // с помощью drag-n-drop
@@ -158,7 +161,7 @@
 
     avatarFile = evt.dataTransfer.files[0];
     renderPreview(avatarFile, avatar);
-    return avatarFile;
+    window.attachment.avatarFile = avatarFile;
   });
 
 
@@ -195,6 +198,7 @@
 
   window.attachment = {
     avatarFile: avatarFile,
+    photoFile: photoFile,
     clearAvatar: clearAvatar,
     clearPhoto: clearPhoto
   };
