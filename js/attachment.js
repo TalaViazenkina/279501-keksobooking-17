@@ -133,6 +133,7 @@
   avatarChooser.addEventListener('change', function () {
     avatarFile = avatarChooser.files[0];
     renderPreview(avatarFile, avatar);
+
   });
 
   // с помощью drag-n-drop
@@ -158,7 +159,8 @@
 
     avatarFile = evt.dataTransfer.files[0];
     renderPreview(avatarFile, avatar);
-    return avatarFile;
+    window.attachment.avatarFile = avatarFile;
+    console.log(window.attachment.avatarFile);
   });
 
 

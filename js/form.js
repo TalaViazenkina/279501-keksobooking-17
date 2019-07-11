@@ -81,7 +81,10 @@
     // если в данный момент никакая другая отправка не выполняется
     if (!window.backend.isSaving) {
       window.backend.isSaving = true;
-      window.backend.save(new FormData(window.utils.adForm), window.success, window.error);
+      var formData = new FormData(window.utils.adForm);
+      console.log(window.attachment.avatarFile);
+      formData.append('avatar', window.attachment.avatarFile);
+      window.backend.save(formData, window.success, window.error);
     }
   });
 
