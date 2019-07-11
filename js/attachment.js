@@ -34,6 +34,36 @@
     }
   };
 
+  /**
+  * отрисовыват превью при загрузке несколькиз файлов
+  * @param {FileList} fileList
+  */
+  var renderMultipleFiles = function (fileList) {
+    var fragment = document.createDocumentFragment();
+
+    // переводим FileList в массив
+    var fileArray = Array.prototype.slice.call(fileList);
+
+    fileArray.forEach(function (file, index) {
+      if (index === 0) {
+        // в блок, в котором должно быть размещено фото добавляем img
+        var image = document.createElement('img');
+        image.width = 70;
+        image.height = 70;
+        photo.appendChild(image);
+        // отрисовываем превью в img
+        renderPreview(file, image);
+      } else {
+        // если фото > 1 -> клонируем блок для отображения фото
+        photo = photo.cloneNode(true);
+        image = photo.querySelector('img');
+        renderPreview(file, image); // отрисовываем превью
+        fragment.appendChild(photo); // добовляем сформированный блок во фрагмент
+      }
+    });
+    photoContainer.appendChild(fragment); // добавляем фрагмент с блоками в разметку
+  };
+
 
   /**
   * запрещает события по умолчанию
@@ -99,24 +129,7 @@
 
   // добавление фотографий жилья
   photoChooser.addEventListener('change', function () {
-    var fragment = document.createDocumentFragment();
-    var image = document.createElement('img');
-    image.width = 70;
-    image.height = 70;
-    photo.appendChild(image);
-
-    var photoFiles = Array.prototype.slice.call(photoChooser.files);
-    photoFiles.forEach(function (file, index) {
-      if (index === 0) {
-        renderPreview(file, image);
-      } else {
-        var photoBox = photo.cloneNode(true);
-        var photoBoxImage = photoBox.querySelector('img');
-        renderPreview(file, photoBoxImage);
-        fragment.appendChild(photoBox);
-      }
-    });
-    photoContainer.appendChild(fragment);
+    renderMultipleFiles(photoChooser.files);
   });
 
   photoDropZone.addEventListener('dragenter', function (evt) {
@@ -140,27 +153,8 @@
     unhighlight(photoDropZone);
     // сохраняем "перетянутые" файлы в свойство .files инпута
     photoChooser.files = evt.dataTransfer.files;
-
-    var photoFiles = Array.prototype.slice.call(evt.dataTransfer.files);
-
-    var fragment = document.createDocumentFragment();
-    var image = document.createElement('img');
-    image.width = 70;
-    image.height = 70;
-    photo.appendChild(image);
-
-    photoFiles.forEach(function (file, index) {
-      if (index === 0) {
-        renderPreview(file, image);
-      } else {
-        var photoBox = photo.cloneNode(true);
-        var photoBoxImage = photoBox.querySelector('img');
-        renderPreview(file, photoBoxImage);
-        fragment.appendChild(photoBox);
-      }
-    });
-    photoContainer.appendChild(fragment);
-
+    // запускаем отрисовку
+    renderMultipleFiles(evt.dataTransfer.files);
   });
 
 
