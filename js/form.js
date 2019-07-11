@@ -89,10 +89,12 @@
   resetButton.addEventListener('click', function (evt) {
     evt.preventDefault();
 
-    window.utils.adForm.reset();
-    window.pin.clear();
-    window.card.remove();
-    window.map.enterCoordinateInitial();
+    window.utils.adForm.reset(); // сброс формы
+    window.attachment.clearAvatar(); // обнуление аватарки
+    window.attachment.clearPhoto(); // удаление превью добавленных фотографий
+    window.pin.clear(); // удаление меток
+    window.card.remove(); // удаление карточки объявления
+    window.map.enterCoordinateInitial(); // ввод координат, соответствующих изначальному положению метки
 
     // передвигаем метку в центр
     window.data.MAIN_PIN.style.top = window.data.MainPinInitial.Y + 'px';
