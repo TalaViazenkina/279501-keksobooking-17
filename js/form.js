@@ -82,8 +82,10 @@
     if (!window.backend.isSaving) {
       window.backend.isSaving = true;
       var formData = new FormData(window.utils.adForm);
-      console.log(window.attachment.avatarFile);
       formData.append('avatar', window.attachment.avatarFile);
+      window.attachment.photoFile.forEach(function (it) {
+        formData.append('images[]', it);
+      });
       window.backend.save(formData, window.success, window.error);
     }
   });
