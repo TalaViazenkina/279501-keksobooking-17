@@ -16,6 +16,8 @@
 
   var isAttachedFiles; // флаг, показывающий, что были добавлены фотографии
 
+  var avatarFile;
+
   /**
   * меняет аватарку на аватарку по умолчанию
   */
@@ -129,7 +131,7 @@
   // добавление аватарки автора
   // через окно диалога выбора файла
   avatarChooser.addEventListener('change', function () {
-    var avatarFile = avatarChooser.files[0];
+    avatarFile = avatarChooser.files[0];
     renderPreview(avatarFile, avatar);
   });
 
@@ -153,11 +155,10 @@
   avatarDropZone.addEventListener('drop', function (evt) {
     preventDefaults(evt);
     unhighlight(avatarDropZone);
-    // сохраняем "перетянутые" файлы в свойство .files инпута
-    avatarChooser.files = evt.dataTransfer.files;
 
-    var avatarFile = evt.dataTransfer.files[0];
+    avatarFile = evt.dataTransfer.files[0];
     renderPreview(avatarFile, avatar);
+    return avatarFile;
   });
 
 
@@ -187,15 +188,13 @@
   photoDropZone.addEventListener('drop', function (evt) {
     preventDefaults(evt);
     unhighlight(photoDropZone);
-    // сохраняем "перетянутые" файлы в свойство .files инпута
-    console.log(evt.dataTransfer.files);
-    photoChooser.files = evt.dataTransfer.files;
-    console.log(photoChooser.files);
+
     // запускаем отрисовку
     renderMultipleFiles(evt.dataTransfer.files);
   });
 
   window.attachment = {
+    avatarFile: avatarFile,
     clearAvatar: clearAvatar,
     clearPhoto: clearPhoto
   };
