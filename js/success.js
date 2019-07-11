@@ -57,6 +57,7 @@
     renderSuccess(); // отрисовка сообщения
     window.utils.adForm.reset(); // сброс формы
     window.attachment.clearAvatar(); // обнуление аватарки
+    window.attachment.clearPhoto(); // удаление превью добавленных фотографий
     window.pin.clear(); // удаление меток
     window.card.remove(); // удаление карточки объявления
     window.map.enterCoordinateInitial(); // ввод координат, соответствующих изначальному положению метки

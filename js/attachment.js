@@ -14,11 +14,34 @@
   var photoDropZone = window.utils.adForm.querySelector('.ad-form__drop-zone'); // зона, на которую осуществляется перетаскивание
   var photoContainer = window.utils.adForm.querySelector('.ad-form__photo-container'); // контейнер с фотографиями
 
+  var isAttachedFiles; // флаг, показывающий, что были добавлены фотографии
+
   /**
   * меняет аватарку на аватарку по умолчанию
   */
   var clearAvatar = function () {
     avatar.src = avatarInitial;
+  };
+
+  /**
+  * очищает область с превью фотографий жилья
+  */
+  var clearPhoto = function () {
+    // если фотографии были ранее добавлены - находим блоки с превью
+    if (isAttachedFiles) {
+      var attachedPhotos = Array.prototype.slice.call(photoContainer.querySelectorAll('.ad-form__photo'));
+      attachedPhotos.forEach(function (it, index) {
+        // в первом блоке удаляем только фото
+        if (index === 0) {
+          (it.querySelector('img')).remove();
+        } else {
+        // все поледующие блоки удаляем целиком
+          it.remove();
+        }
+      });
+
+      isAttachedFiles = false;
+    }
   };
 
   /**
@@ -47,6 +70,9 @@
   * @param {FileList} fileList
   */
   var renderMultipleFiles = function (fileList) {
+    // удаляем превью, если они уже были отрисованы
+    clearPhoto();
+
     var fragment = document.createDocumentFragment();
 
     // переводим FileList в массив
@@ -63,13 +89,14 @@
         renderPreview(file, image);
       } else {
         // если фото > 1 -> клонируем блок для отображения фото
-        photo = photo.cloneNode(true);
-        image = photo.querySelector('img');
+        var photoClone = photo.cloneNode(true);
+        image = photoClone.querySelector('img');
         renderPreview(file, image); // отрисовываем превью
-        fragment.appendChild(photo); // добовляем сформированный блок во фрагмент
+        fragment.appendChild(photoClone); // добовляем сформированный блок во фрагмент
       }
     });
     photoContainer.appendChild(fragment); // добавляем фрагмент с блоками в разметку
+    isAttachedFiles = true; // меняем флаг
   };
 
 
@@ -161,12 +188,15 @@
     preventDefaults(evt);
     unhighlight(photoDropZone);
     // сохраняем "перетянутые" файлы в свойство .files инпута
+    console.log(evt.dataTransfer.files);
     photoChooser.files = evt.dataTransfer.files;
+    console.log(photoChooser.files);
     // запускаем отрисовку
     renderMultipleFiles(evt.dataTransfer.files);
   });
 
   window.attachment = {
-    clearAvatar: clearAvatar
+    clearAvatar: clearAvatar,
+    clearPhoto: clearPhoto
   };
 })();
