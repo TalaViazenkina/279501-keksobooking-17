@@ -155,6 +155,7 @@
     if (avatarFile && checkType(avatarFile)) {
       renderPreview(avatarFile, avatar);
     }
+    window.attachment.avatarFile = undefined;
   });
 
   // с помощью drag-n-drop

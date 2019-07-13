@@ -82,7 +82,9 @@
     if (!window.backend.isSaving) {
       window.backend.isSaving = true;
       var formData = new FormData(window.utils.adForm);
-      formData.append('avatar', window.attachment.avatarFile);
+      if (window.attachment.avatarFile) {
+        formData.append('avatar', window.attachment.avatarFile);
+      }
       if (window.attachment.photoFile) {
         window.attachment.photoFile.forEach(function (it) {
           formData.append('images[]', it);
