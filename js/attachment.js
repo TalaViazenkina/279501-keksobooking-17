@@ -3,6 +3,14 @@
 // модуль загрузки файлов в форму
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png']; // допустимые расширения файлов
+  var IMAGE_SIZE = 70; // размер изображения в превью
+
+  var DropZoneStyle = {
+    BORDER_ACTIVE: '#ff5635',
+    BG_ACTIVE: 'rgba(255, 86, 53, 0.1)',
+    BORDER_INITIAL: '#c7c7c7',
+    BG_INITIAL: 'transparent'
+  };
 
   var avatarChooser = window.utils.adForm.querySelector('#avatar'); // поле загрузки аватарки
   var avatar = window.utils.adForm.querySelector('.ad-form-header__preview img'); // поле отображения аватара
@@ -24,6 +32,7 @@
   */
   var clearAvatar = function () {
     avatar.src = avatarInitial;
+    window.attachment.avatarFile = undefined; // обнуляем добавленный файл с аватаркой
   };
 
   /**
@@ -43,8 +52,21 @@
         }
       });
 
-      isAttachedFiles = false;
+      window.attachment.photoFile = []; // обнуляем список добавленных файлов
+      isAttachedFiles = false; // меняем флаг
     }
+  };
+
+  /**
+  * проверяет соответствие расширения файла заданному
+  * @param {File} file
+  * @return {boolean}
+  */
+  var checkType = function (file) {
+    var fileName = file.name.toLowerCase();
+    return FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
   };
 
   /**
@@ -53,56 +75,50 @@
   * @param {HTMLImageElement} preview
   */
   var renderPreview = function (file, preview) {
-    var fileName = file.name.toLowerCase();
-    // по расширению файла проверяем, является ли выбранный файл изображением
-    var matches = FILE_TYPES.some(function (it) {
-      return fileName.endsWith(it);
+    var reader = new FileReader();
+    reader.addEventListener('load', function () {
+      preview.src = reader.result;
     });
-    // если файл прошел проверку, с помощью FileReader записываем его в кодировке Base:64 в src
-    if (matches) {
-      var reader = new FileReader();
-      reader.addEventListener('load', function () {
-        preview.src = reader.result;
-      });
-      reader.readAsDataURL(file);
-    }
+    reader.readAsDataURL(file);
   };
 
   /**
   * отрисовыват превью при загрузке несколькиз файлов
   * @param {FileList} fileList
+  * @return {Array}
   */
   var renderMultipleFiles = function (fileList) {
     // удаляем превью, если они уже были отрисованы
     clearPhoto();
 
+    var correctFiles = []; // массив для хранения только файлов изображений
     var fragment = document.createDocumentFragment();
+    var image;
 
     // переводим FileList в массив
     var fileArray = Array.prototype.slice.call(fileList);
-    window.attachment.photoFile = fileArray;
 
-    fileArray.forEach(function (file, index) {
-      if (index === 0) {
-        // в блок, в котором должно быть размещено фото добавляем img
-        var image = document.createElement('img');
-        image.width = 70;
-        image.height = 70;
-        photo.appendChild(image);
-        // отрисовываем превью в img
-        renderPreview(file, image);
-      } else {
-        // если фото > 1 -> клонируем блок для отображения фото
-        var photoClone = photo.cloneNode(true);
-        image = photoClone.querySelector('img');
-        renderPreview(file, image); // отрисовываем превью
-        fragment.appendChild(photoClone); // добовляем сформированный блок во фрагмент
+    fileArray.forEach(function (file) {
+      if (file && checkType(file)) {
+        if (!image) {
+          image = document.createElement('img');
+          image.width = IMAGE_SIZE;
+          photo.appendChild(image);
+          renderPreview(file, image);
+          correctFiles.push(file);
+        } else {
+          var photoClone = photo.cloneNode(true);
+          image = photoClone.querySelector('img');
+          renderPreview(file, image);
+          fragment.appendChild(photoClone);
+          correctFiles.push(file);
+        }
+        isAttachedFiles = true;
       }
+      photoContainer.appendChild(fragment); // добавляем фрагмент с блоками в разметку
     });
-    photoContainer.appendChild(fragment); // добавляем фрагмент с блоками в разметку
-    isAttachedFiles = true; // меняем флаг
+    return correctFiles;
   };
-
 
   /**
   * запрещает события по умолчанию
@@ -114,19 +130,21 @@
   };
 
   /**
-  * изменяет цвет границы
+  * "подсвечивает" область на которую осуществляется перетаскивание
   * @param {HTMLElement} dropZone
   */
   var highlight = function (dropZone) {
-    dropZone.style.borderColor = '#ff5635';
+    dropZone.style.borderColor = DropZoneStyle.BORDER_ACTIVE;
+    dropZone.style.backgroundColor = DropZoneStyle.BG_ACTIVE;
   };
 
   /**
-  * изменяет цвет границы (на первоначальный)
+  * меняет стили области перетаскивания на первоначальные
   * @param {HTMLElement} dropZone
   */
   var unhighlight = function (dropZone) {
-    dropZone.style.borderColor = '#c7c7c7';
+    dropZone.style.borderColor = DropZoneStyle.BORDER_INITIAL;
+    dropZone.style.backgroundColor = DropZoneStyle.BG_INITIAL;
   };
 
 
@@ -134,8 +152,9 @@
   // через окно диалога выбора файла
   avatarChooser.addEventListener('change', function () {
     avatarFile = avatarChooser.files[0];
-    renderPreview(avatarFile, avatar);
-
+    if (avatarFile && checkType(avatarFile)) {
+      renderPreview(avatarFile, avatar);
+    }
   });
 
   // с помощью drag-n-drop
@@ -160,8 +179,10 @@
     unhighlight(avatarDropZone);
 
     avatarFile = evt.dataTransfer.files[0];
-    renderPreview(avatarFile, avatar);
-    window.attachment.avatarFile = avatarFile;
+    if (avatarFile && checkType(avatarFile)) {
+      renderPreview(avatarFile, avatar);
+      window.attachment.avatarFile = avatarFile;
+    }
   });
 
 
@@ -193,7 +214,7 @@
     unhighlight(photoDropZone);
 
     // запускаем отрисовку
-    renderMultipleFiles(evt.dataTransfer.files);
+    window.attachment.photoFile = renderMultipleFiles(evt.dataTransfer.files);
   });
 
   window.attachment = {
