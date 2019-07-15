@@ -59,12 +59,10 @@
     /**
     * проверяет, был ли нажат esc
     * @param {event} evt
-    * @param {function} action
+    * @return {Boolean}
     */
-    isEscEvent: function (evt, action) {
-      if (evt.keyCode === ESC_KEYCODE) {
-        action();
-      }
+    isEscEvent: function (evt) {
+      return evt.keyCode === ESC_KEYCODE;
     }
   };
 })();

@@ -35,7 +35,9 @@
   */
   var onSuccessEscPress = function (evt) {
     evt.preventDefault();
-    window.utils.isEscEvent(evt, closeSuccess);
+    if (window.utils.isEscEvent) {
+      closeSuccess();
+    }
   };
 
   /**

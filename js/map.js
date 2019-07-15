@@ -25,11 +25,11 @@
   };
 
   // форма подачи объявления
-  var adFormFieldsetsList = window.data.adForm.querySelectorAll('fieldset');
+  var adFormFieldsetArray = Array.prototype.slice.call(window.data.adForm.querySelectorAll('fieldset'));
   var adFormAddress = window.data.adForm.querySelector('#address'); // поля ввода координат адреса
 
   // форма фильтрации объявлений
-  var mapFiltersSelectsList = window.filters.form.querySelectorAll('.map__filter'); // все селекты в форме фильтрации
+  var mapFiltersSelectArray = Array.prototype.slice.call(window.filters.form.querySelectorAll('.map__filter')); // все селекты в форме фильтрации
   var mapFiltersFieldset = window.filters.form.querySelector('.map__features'); // филдсет в форме фильтрации
 
   var moveCount = 0; // флаг/счетчик передвижения мыши
@@ -49,7 +49,6 @@
     if (window.data.map.offsetWidth < MAP_MAX_WIDTH) {
       locationX.max = window.data.map.offsetWidth - window.data.MAIN_PIN_WIDTH;
     }
-
   };
 
   /**
@@ -86,15 +85,15 @@
     // заблокируем фильтры
     window.utils.addDisabled(mapFiltersFieldset);
 
-    for (var i = 0; i < mapFiltersSelectsList.length; i++) {
-      window.utils.addDisabled(mapFiltersSelectsList[i]);
-    }
+    mapFiltersSelectArray.forEach(function (it) {
+      window.utils.addDisabled(it);
+    });
     isFilterDisabled = true;
 
     // заблокируем поля формы подачи объявления
-    for (i = 0; i < adFormFieldsetsList.length; i++) {
-      window.utils.addDisabled(adFormFieldsetsList[i]);
-    }
+    adFormFieldsetArray.forEach(function (it) {
+      window.utils.addDisabled(it);
+    });
 
     // передадим изначальные координаты метки в поле адреса
     enterCoordinateInitial();
@@ -110,9 +109,9 @@
     window.data.adForm.classList.remove('ad-form--disabled');
 
     // удаляем со всех элементов управления формой атрибут disabled
-    for (var i = 0; i < adFormFieldsetsList.length; i++) {
-      window.utils.removeDisabled(adFormFieldsetsList[i]);
-    }
+    adFormFieldsetArray.forEach(function (it) {
+      window.utils.removeDisabled(it);
+    });
 
     // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
     window.form.getPrice(window.data.typePriceMap);
@@ -128,9 +127,9 @@
     // разблокируем форму с фильтрами
     if (isFilterDisabled) {
       window.utils.removeDisabled(mapFiltersFieldset);
-      for (var i = 0; i < mapFiltersSelectsList.length; i++) {
-        window.utils.removeDisabled(mapFiltersSelectsList[i]);
-      }
+      mapFiltersSelectArray.forEach(function (it) {
+        window.utils.removeDisabled(it);
+      });
       isFilterDisabled = false;
     }
   };
