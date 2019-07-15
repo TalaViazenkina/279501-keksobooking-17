@@ -83,10 +83,7 @@
   * @return {boolean}
   */
   var checkTypeValue = function (it) {
-    if (selectedTypeValue === unselectedValue) {
-      return true;
-    }
-    return it.offer.type === selectedTypeValue;
+    return (selectedTypeValue === unselectedValue) || (it.offer.type === selectedTypeValue);
   };
 
     /**
@@ -110,10 +107,7 @@
   * @return {boolean}
   */
   var checkRoomValue = function (it) {
-    if (selectedRoomValue === unselectedValue) {
-      return true;
-    }
-    return it.offer.rooms.toString() === selectedRoomValue;
+    return (selectedRoomValue === unselectedValue) || (it.offer.rooms.toString() === selectedRoomValue);
   };
 
     /**
@@ -122,10 +116,7 @@
   * @return {boolean}
   */
   var checkGuestValue = function (it) {
-    if (selectedGuestValue === unselectedValue) {
-      return true;
-    }
-    return it.offer.guests.toString() === selectedGuestValue;
+    return (selectedGuestValue === unselectedValue) || (it.offer.guests.toString() === selectedGuestValue);
   };
 
   /**
@@ -136,10 +127,7 @@
   */
 
   var checkFeatures = function (input, it) {
-    if (!input.checked) {
-      return true;
-    }
-    return it.offer.features.indexOf(input.value) !== -1;
+    return (!input.checked) || (it.offer.features.indexOf(input.value) !== -1);
   };
 
 
