@@ -161,7 +161,9 @@
   * @param {Event} evt
   */
   var onPopapEscPress = function (evt) {
-    window.utils.isEscEvent(evt, closePopap);
+    if (window.utils.isEscEvent(evt)) {
+      closePopap();
+    }
   };
 
   /**
