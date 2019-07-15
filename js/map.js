@@ -33,6 +33,7 @@
   var mapFiltersFieldset = window.filters.form.querySelector('.map__features'); // филдсет в форме фильтрации
 
   var moveCount = 0; // флаг/счетчик передвижения мыши
+  var isFilterDisabled; // флаг заблокированной формы фильтровж
 
   /**
   * заполняет поле изначальными координатами метки
@@ -82,13 +83,15 @@
   * переводит страницу в неактивное состояние
   */
   var desactivatePage = function () {
-    // добавим всем элементам управления формой атрибут disabled
+    // заблокируем фильтры
     window.utils.addDisabled(mapFiltersFieldset);
 
     for (var i = 0; i < mapFiltersSelectsList.length; i++) {
       window.utils.addDisabled(mapFiltersSelectsList[i]);
     }
+    isFilterDisabled = true;
 
+    // заблокируем поля формы подачи объявления
     for (i = 0; i < adFormFieldsetsList.length; i++) {
       window.utils.addDisabled(adFormFieldsetsList[i]);
     }
@@ -123,9 +126,12 @@
     // запустим отрисовку меток
     window.pin.render(window.data.adsList.slice(0, window.data.ADS_MAX_NUMBER));
     // разблокируем форму с фильтрами
-    window.utils.removeDisabled(mapFiltersFieldset);
-    for (var i = 0; i < mapFiltersSelectsList.length; i++) {
-      window.utils.removeDisabled(mapFiltersSelectsList[i]);
+    if (isFilterDisabled) {
+      window.utils.removeDisabled(mapFiltersFieldset);
+      for (var i = 0; i < mapFiltersSelectsList.length; i++) {
+        window.utils.removeDisabled(mapFiltersSelectsList[i]);
+      }
+      isFilterDisabled = false;
     }
   };
 
