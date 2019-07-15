@@ -25,8 +25,8 @@
   };
 
   // форма подачи объявления
-  var adFormFieldsetsList = window.utils.adForm.querySelectorAll('fieldset');
-  var adFormAddress = window.utils.adForm.querySelector('#address'); // поля ввода координат адреса
+  var adFormFieldsetsList = window.data.adForm.querySelectorAll('fieldset');
+  var adFormAddress = window.data.adForm.querySelector('#address'); // поля ввода координат адреса
 
   // форма фильтрации объявлений
   var mapFiltersSelectsList = window.filters.form.querySelectorAll('.map__filter'); // все селекты в форме фильтрации
@@ -104,7 +104,7 @@
   */
   var activatePage = function () {
     window.data.MAP.classList.remove('map--faded');
-    window.utils.adForm.classList.remove('ad-form--disabled');
+    window.data.adForm.classList.remove('ad-form--disabled');
 
     // удаляем со всех элементов управления формой атрибут disabled
     for (var i = 0; i < adFormFieldsetsList.length; i++) {

@@ -55,7 +55,7 @@
   // все действия при успешной отправке
   var onSuccess = function () {
     renderSuccess(); // отрисовка сообщения
-    window.utils.adForm.reset(); // сброс формы
+    window.data.adForm.reset(); // сброс формы
     window.attachment.clearAvatar(); // обнуление аватарки
     window.attachment.clearPhoto(); // удаление превью добавленных фотографий
     window.pin.clear(); // удаление меток

@@ -8,9 +8,6 @@
   var ESC_KEYCODE = 27;
 
   window.utils = {
-
-    adForm: document.querySelector('.ad-form'), // форма добавления объявлений
-
     /**
     * генерирует случайный элемент массива
     * @param {array} arr

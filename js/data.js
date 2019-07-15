@@ -4,10 +4,12 @@
 (function () {
   var MAP = document.querySelector('.map');
   var MAIN_PIN = MAP.querySelector('.map__pin--main'); // главная метка
+  var adForm = document.querySelector('.ad-form'); // форма добавления объявлений
 
   window.data = {
     MAP: MAP,
     MAIN_PIN: MAIN_PIN,
+    adForm: adForm,
     ADS_MAX_NUMBER: 5, // максимальное количество похожих объявлений, отображаемое на карте
     /**
     * тип недвижимости
