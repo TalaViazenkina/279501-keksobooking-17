@@ -55,7 +55,7 @@
   * заполняет поле координатами передвинутой метки
   */
   var enterCoordinate = function () {
-    adFormAddress.value = (window.data.MAIN_PIN.offsetLeft + window.data.MAIN_PIN_WIDTH / 2) + ', ' + (window.data.MAIN_PIN.offsetTop + window.data.MAIN_PIN_HEIGHT);
+    adFormAddress.value = (window.data.mainPin.offsetLeft + window.data.MAIN_PIN_WIDTH / 2) + ', ' + (window.data.mainPin.offsetTop + window.data.MAIN_PIN_HEIGHT);
   };
 
   /** сравнивает полученную координату с заданным диапазоном
@@ -138,7 +138,7 @@
   });
 
   // перемещение главной метки
-  window.data.MAIN_PIN.addEventListener('mousedown', function (evt) {
+  window.data.mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
     moveCount += 1;
 
@@ -170,8 +170,8 @@
       };
 
       // задаем новые координаты для метки в стили
-      window.data.MAIN_PIN.style.top = checkCoord(window.data.MAIN_PIN.offsetTop, shift.y, LocationY.MIN, LocationY.MAX) + 'px'; // y
-      window.data.MAIN_PIN.style.left = checkCoord(window.data.MAIN_PIN.offsetLeft, shift.x, locationX.MIN, locationX.max) + 'px'; // x
+      window.data.mainPin.style.top = checkCoord(window.data.mainPin.offsetTop, shift.y, LocationY.MIN, LocationY.MAX) + 'px'; // y
+      window.data.mainPin.style.left = checkCoord(window.data.mainPin.offsetLeft, shift.x, locationX.MIN, locationX.max) + 'px'; // x
 
       // записываем измененные координаты в поле ввода
       enterCoordinate();

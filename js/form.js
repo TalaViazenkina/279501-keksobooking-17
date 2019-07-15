@@ -105,9 +105,7 @@
     window.card.remove(); // удаление карточки объявления
     window.map.enterCoordinateInitial(); // ввод координат, соответствующих изначальному положению метки
 
-    // передвигаем метку в центр
-    window.data.MAIN_PIN.style.top = window.data.MainPinInitial.Y + 'px';
-    window.data.MAIN_PIN.style.left = window.data.MainPinInitial.X + 'px';
+    window.data.movePinToInitial(); // передвигаем метку в центр
   });
 
 })();

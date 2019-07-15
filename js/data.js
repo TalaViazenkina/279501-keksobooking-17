@@ -3,13 +3,11 @@
 // модуль с исходными параметрами и данными
 (function () {
   var map = document.querySelector('.map');
-  var MAIN_PIN = map.querySelector('.map__pin--main'); // главная метка
+  var mainPin = map.querySelector('.map__pin--main'); // главная метка
   var adForm = document.querySelector('.ad-form'); // форма добавления объявлений
 
   window.data = {
-    map: map,
-    MAIN_PIN: MAIN_PIN,
-    adForm: adForm,
+
     ADS_MAX_NUMBER: 5, // максимальное количество похожих объявлений, отображаемое на карте
     /**
     * тип недвижимости
@@ -49,10 +47,14 @@
     */
     MAIN_PIN_SIZE: 65,
 
+    map: map,
+    mainPin: mainPin,
+    adForm: adForm,
+
     // начальные координаты главной метки
     MainPinInitial: {
-      X: MAIN_PIN.offsetLeft,
-      Y: MAIN_PIN.offsetTop
+      X: mainPin.offsetLeft,
+      Y: mainPin.offsetTop
     },
 
     // создадим объект-мапу для хранения зависимости минимальной стоимости от типа жилья
@@ -64,7 +66,15 @@
     },
 
     // переменная для хранения данных с сервера
-    adsList: []
+    adsList: [],
+
+    /**
+    * возвращает главную метку в центр
+    */
+    movePinToInitial: function () {
+      window.data.mainPin.style.top = window.data.MainPinInitial.Y + 'px';
+      window.data.mainPin.style.left = window.data.MainPinInitial.X + 'px';
+    }
 
   };
 
