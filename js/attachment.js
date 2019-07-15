@@ -88,9 +88,6 @@
   * @return {Array}
   */
   var renderMultipleFiles = function (fileList) {
-    // удаляем превью, если они уже были отрисованы
-    clearPhoto();
-
     var correctFiles = []; // массив для хранения только файлов изображений
     var fragment = document.createDocumentFragment();
     var image;
@@ -190,6 +187,7 @@
   // добавление фотографий жилья
   // через окно диалога выбора файла
   photoChooser.addEventListener('change', function () {
+    clearPhoto(); // удаляем превью, если они уже были отрисованы
     renderMultipleFiles(photoChooser.files);
   });
 
@@ -215,6 +213,7 @@
     unhighlight(photoDropZone);
 
     // запускаем отрисовку
+    clearPhoto(); // удаляем превью, если они уже были отрисованы
     window.attachment.photoFile = renderMultipleFiles(evt.dataTransfer.files);
   });
 
