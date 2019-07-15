@@ -3,7 +3,7 @@
 // модуль фильтрации объявлений
 (function () {
   window.filters = {
-    form: window.data.MAP.querySelector('.map__filters') // форма с фильтрами
+    form: window.data.map.querySelector('.map__filters') // форма с фильтрами
   };
 
   var selectType = window.filters.form.querySelector('select[name=housing-type]'); // фильтр типа жилья
@@ -83,10 +83,7 @@
   * @return {boolean}
   */
   var checkTypeValue = function (it) {
-    if (selectedTypeValue === unselectedValue) {
-      return true;
-    }
-    return it.offer.type === selectedTypeValue;
+    return (selectedTypeValue === unselectedValue) || (it.offer.type === selectedTypeValue);
   };
 
     /**
@@ -110,10 +107,7 @@
   * @return {boolean}
   */
   var checkRoomValue = function (it) {
-    if (selectedRoomValue === unselectedValue) {
-      return true;
-    }
-    return it.offer.rooms.toString() === selectedRoomValue;
+    return (selectedRoomValue === unselectedValue) || (it.offer.rooms.toString() === selectedRoomValue);
   };
 
     /**
@@ -122,10 +116,7 @@
   * @return {boolean}
   */
   var checkGuestValue = function (it) {
-    if (selectedGuestValue === unselectedValue) {
-      return true;
-    }
-    return it.offer.guests.toString() === selectedGuestValue;
+    return (selectedGuestValue === unselectedValue) || (it.offer.guests.toString() === selectedGuestValue);
   };
 
   /**
@@ -136,10 +127,25 @@
   */
 
   var checkFeatures = function (input, it) {
-    if (!input.checked) {
-      return true;
-    }
-    return it.offer.features.indexOf(input.value) !== -1;
+    return (!input.checked) || (it.offer.features.indexOf(input.value) !== -1);
+  };
+
+  /**
+  * суммарный фильтр
+  * @param {Object} it
+  * @return {boolean}
+  */
+  var checkTotal = function (it) {
+    return checkTypeValue(it) &&
+            checkPriceValue(it) &&
+            checkRoomValue(it) &&
+            checkGuestValue(it) &&
+            checkFeatures(wifi, it) &&
+            checkFeatures(dishwasher, it) &&
+            checkFeatures(parking, it) &&
+            checkFeatures(washer, it) &&
+            checkFeatures(elevator, it) &&
+            checkFeatures(conditioner, it);
   };
 
 
@@ -156,16 +162,7 @@
 
     // отфильтруем данные
     filteredData = window.data.adsList.filter(function (ad) {
-      return checkTypeValue(ad) &&
-            checkPriceValue(ad) &&
-            checkRoomValue(ad) &&
-            checkGuestValue(ad) &&
-            checkFeatures(wifi, ad) &&
-            checkFeatures(dishwasher, ad) &&
-            checkFeatures(parking, ad) &&
-            checkFeatures(washer, ad) &&
-            checkFeatures(elevator, ad) &&
-            checkFeatures(conditioner, ad);
+      return checkTotal(ad);
     });
 
     // запустим отрисовку отфильтрованных меток

@@ -3,7 +3,7 @@
 // модуль, отвечающий за активацию страницы при перетаскивании пина
 (function () {
 
-  // максимальная ширина карты (из CSS)ж
+  // максимальная ширина карты (из CSS);
   var MAP_MAX_WIDTH = 1200;
 
   /**
@@ -21,18 +21,20 @@
   */
   var locationX = {
     MIN: 0,
-    max: window.data.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH
+    max: window.data.map.offsetWidth - window.data.MAIN_PIN_WIDTH
   };
 
   // форма подачи объявления
-  var adFormFieldsetsList = window.utils.adForm.querySelectorAll('fieldset');
-  var adFormAddress = window.utils.adForm.querySelector('#address'); // поля ввода координат адреса
+  var adFormFieldsetArray = Array.prototype.slice.call(window.data.adForm.querySelectorAll('fieldset'));
+  var adFormAddress = window.data.adForm.querySelector('#address'); // поля ввода координат адреса
 
   // форма фильтрации объявлений
-  var mapFiltersSelectsList = window.filters.form.querySelectorAll('.map__filter'); // все селекты в форме фильтрации
+  var mapFiltersSelectArray = Array.prototype.slice.call(window.filters.form.querySelectorAll('.map__filter')); // все селекты в форме фильтрации
   var mapFiltersFieldset = window.filters.form.querySelector('.map__features'); // филдсет в форме фильтрации
 
-  var moveCount = 0; // флаг/счетчик передвижения мыши
+
+  var isFilterDisabled; // флаг заблокированной формы фильтров
+  var isPageBlocked; // флаг заблокированной страницы
 
   /**
   * заполняет поле изначальными координатами метки
@@ -45,17 +47,16 @@
   * перерасчитывает максимальную координату x метки при изменении ширины окна браузера
   */
   var updateCoordinate = function () {
-    if (window.data.MAP.offsetWidth < MAP_MAX_WIDTH) {
-      locationX.max = window.data.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH;
+    if (window.data.map.offsetWidth < MAP_MAX_WIDTH) {
+      locationX.max = window.data.map.offsetWidth - window.data.MAIN_PIN_WIDTH;
     }
-
   };
 
   /**
   * заполняет поле координатами передвинутой метки
   */
   var enterCoordinate = function () {
-    adFormAddress.value = (window.data.MAIN_PIN.offsetLeft + window.data.MAIN_PIN_WIDTH / 2) + ', ' + (window.data.MAIN_PIN.offsetTop + window.data.MAIN_PIN_HEIGHT);
+    adFormAddress.value = (window.data.mainPin.offsetLeft + window.data.MAIN_PIN_WIDTH / 2) + ', ' + (window.data.mainPin.offsetTop + window.data.MAIN_PIN_HEIGHT);
   };
 
   /** сравнивает полученную координату с заданным диапазоном
@@ -82,37 +83,43 @@
   * переводит страницу в неактивное состояние
   */
   var desactivatePage = function () {
-    // добавим всем элементам управления формой атрибут disabled
+    // заблокируем фильтры
     window.utils.addDisabled(mapFiltersFieldset);
 
-    for (var i = 0; i < mapFiltersSelectsList.length; i++) {
-      window.utils.addDisabled(mapFiltersSelectsList[i]);
-    }
+    mapFiltersSelectArray.forEach(function (it) {
+      window.utils.addDisabled(it);
+    });
+    isFilterDisabled = true;
 
-    for (i = 0; i < adFormFieldsetsList.length; i++) {
-      window.utils.addDisabled(adFormFieldsetsList[i]);
-    }
+    // заблокируем поля формы подачи объявления
+    adFormFieldsetArray.forEach(function (it) {
+      window.utils.addDisabled(it);
+    });
 
     // передадим изначальные координаты метки в поле адреса
     enterCoordinateInitial();
 
-    moveCount = 0; // обнуляем счетчик передвижения мыши
+    isPageBlocked = true; // меняем флаг
   };
 
   /**
   * активирует страницу
   */
   var activatePage = function () {
-    window.data.MAP.classList.remove('map--faded');
-    window.utils.adForm.classList.remove('ad-form--disabled');
+    if (isPageBlocked) {
+      window.data.map.classList.remove('map--faded');
+      window.data.adForm.classList.remove('ad-form--disabled');
 
-    // удаляем со всех элементов управления формой атрибут disabled
-    for (var i = 0; i < adFormFieldsetsList.length; i++) {
-      window.utils.removeDisabled(adFormFieldsetsList[i]);
+      // удаляем со всех элементов управления формой атрибут disabled
+      adFormFieldsetArray.forEach(function (it) {
+        window.utils.removeDisabled(it);
+      });
+
+      // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
+      window.form.getPrice(window.data.typePriceMap);
+
+      isPageBlocked = false; // меняем флаг
     }
-
-    // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
-    window.form.getPrice(window.data.typePriceMap);
   };
 
   var onLoadSuccess = function (response) {
@@ -123,9 +130,12 @@
     // запустим отрисовку меток
     window.pin.render(window.data.adsList.slice(0, window.data.ADS_MAX_NUMBER));
     // разблокируем форму с фильтрами
-    window.utils.removeDisabled(mapFiltersFieldset);
-    for (var i = 0; i < mapFiltersSelectsList.length; i++) {
-      window.utils.removeDisabled(mapFiltersSelectsList[i]);
+    if (isFilterDisabled) {
+      window.utils.removeDisabled(mapFiltersFieldset);
+      mapFiltersSelectArray.forEach(function (it) {
+        window.utils.removeDisabled(it);
+      });
+      isFilterDisabled = false;
     }
   };
 
@@ -138,13 +148,9 @@
   });
 
   // перемещение главной метки
-  window.data.MAIN_PIN.addEventListener('mousedown', function (evt) {
+  window.data.mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-    moveCount += 1;
-
-    if (moveCount === 1) {
-      activatePage();
-    }
+    activatePage(); // активируем страницу
 
     var dragged = false; // флаг, который будет показывать было ли перемещение мыши
 
@@ -170,8 +176,8 @@
       };
 
       // задаем новые координаты для метки в стили
-      window.data.MAIN_PIN.style.top = checkCoord(window.data.MAIN_PIN.offsetTop, shift.y, LocationY.MIN, LocationY.MAX) + 'px'; // y
-      window.data.MAIN_PIN.style.left = checkCoord(window.data.MAIN_PIN.offsetLeft, shift.x, locationX.MIN, locationX.max) + 'px'; // x
+      window.data.mainPin.style.top = checkCoord(window.data.mainPin.offsetTop, shift.y, LocationY.MIN, LocationY.MAX) + 'px'; // y
+      window.data.mainPin.style.left = checkCoord(window.data.mainPin.offsetLeft, shift.x, locationX.MIN, locationX.max) + 'px'; // x
 
       // записываем измененные координаты в поле ввода
       enterCoordinate();
@@ -200,6 +206,14 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
 
+  });
+
+  // активация страницы по enter
+  window.data.mainPin.addEventListener('keydown', function (evt) {
+    if (window.utils.isEnterEvent(evt)) {
+      activatePage();
+      window.backend.load(onLoadSuccess, window.error);
+    }
   });
 
   window.map = {

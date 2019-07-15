@@ -35,7 +35,9 @@
   */
   var onSuccessEscPress = function (evt) {
     evt.preventDefault();
-    window.utils.isEscEvent(evt, closeSuccess);
+    if (window.utils.isEscEvent(evt)) {
+      closeSuccess();
+    }
   };
 
   /**
@@ -55,17 +57,16 @@
   // все действия при успешной отправке
   var onSuccess = function () {
     renderSuccess(); // отрисовка сообщения
-    window.utils.adForm.reset(); // сброс формы
+    window.data.adForm.reset(); // сброс формы
     window.attachment.clearAvatar(); // обнуление аватарки
     window.attachment.clearPhoto(); // удаление превью добавленных фотографий
+
     window.pin.clear(); // удаление меток
     window.card.remove(); // удаление карточки объявления
+    window.filters.form.reset(); // сброс фильтров
+
     window.map.enterCoordinateInitial(); // ввод координат, соответствующих изначальному положению метки
-
-    // передвигаем метку в центр
-    window.data.MAIN_PIN.style.top = window.data.MainPinInitial.Y + 'px';
-    window.data.MAIN_PIN.style.left = window.data.MainPinInitial.X + 'px';
-
+    window.data.movePinToInitial(); // передвигаем метку в центр
   };
 
   window.success = onSuccess;

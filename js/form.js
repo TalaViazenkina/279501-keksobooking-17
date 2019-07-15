@@ -4,14 +4,14 @@
 (function () {
 
   // форма добавления объявлений
-  var adFormType = window.utils.adForm.querySelector('#type'); // поле выбора типа жилья
-  var adFormPrice = window.utils.adForm.querySelector('#price'); // поле ввода цены за ночь
-  var adFormTimeIn = window.utils.adForm.querySelector('#timein'); // поле выбора времени заезда
-  var adFormTimeOut = window.utils.adForm.querySelector('#timeout'); // поле выбора времени выезда
-  var adFormRoom = window.utils.adForm.querySelector('#room_number'); // поле выбора количества комната
-  var adFormCapacity = window.utils.adForm.querySelector('#capacity'); // поле выбора количества гостей
+  var adFormType = window.data.adForm.querySelector('#type'); // поле выбора типа жилья
+  var adFormPrice = window.data.adForm.querySelector('#price'); // поле ввода цены за ночь
+  var adFormTimeIn = window.data.adForm.querySelector('#timein'); // поле выбора времени заезда
+  var adFormTimeOut = window.data.adForm.querySelector('#timeout'); // поле выбора времени выезда
+  var adFormRoom = window.data.adForm.querySelector('#room_number'); // поле выбора количества комната
+  var adFormCapacity = window.data.adForm.querySelector('#capacity'); // поле выбора количества гостей
 
-  var resetButton = window.utils.adForm.querySelector('button[type=reset]'); // кнопка сброса
+  var resetButton = window.data.adForm.querySelector('button[type=reset]'); // кнопка сброса
 
   window.form = {
     /**
@@ -74,14 +74,14 @@
   });
 
   // отправка формы
-  window.utils.adForm.addEventListener('submit', function (evt) {
+  window.data.adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
 
     // запускаем отправку данных на сервер только в том случае,
     // если в данный момент никакая другая отправка не выполняется
     if (!window.backend.isSaving) {
       window.backend.isSaving = true;
-      var formData = new FormData(window.utils.adForm);
+      var formData = new FormData(window.data.adForm);
       if (window.attachment.avatarFile) {
         formData.append('avatar', window.attachment.avatarFile);
       }
@@ -98,16 +98,16 @@
   resetButton.addEventListener('click', function (evt) {
     evt.preventDefault();
 
-    window.utils.adForm.reset(); // сброс формы
+    window.data.adForm.reset(); // сброс формы
     window.attachment.clearAvatar(); // обнуление аватарки
     window.attachment.clearPhoto(); // удаление превью добавленных фотографий
+
     window.pin.clear(); // удаление меток
     window.card.remove(); // удаление карточки объявления
-    window.map.enterCoordinateInitial(); // ввод координат, соответствующих изначальному положению метки
+    window.filters.form.reset(); // сброс фильтров
 
-    // передвигаем метку в центр
-    window.data.MAIN_PIN.style.top = window.data.MainPinInitial.Y + 'px';
-    window.data.MAIN_PIN.style.left = window.data.MainPinInitial.X + 'px';
+    window.map.enterCoordinateInitial(); // ввод координат, соответствующих изначальному положению метки
+    window.data.movePinToInitial(); // передвигаем метку в центр
   });
 
 })();

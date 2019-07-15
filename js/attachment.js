@@ -12,15 +12,15 @@
     BG_INITIAL: 'transparent'
   };
 
-  var avatarChooser = window.utils.adForm.querySelector('#avatar'); // поле загрузки аватарки
-  var avatar = window.utils.adForm.querySelector('.ad-form-header__preview img'); // поле отображения аватара
-  var avatarDropZone = window.utils.adForm.querySelector('.ad-form-header__drop-zone'); // зона, на которую осуществляется перетаскивание
+  var avatarChooser = window.data.adForm.querySelector('#avatar'); // поле загрузки аватарки
+  var avatar = window.data.adForm.querySelector('.ad-form-header__preview img'); // поле отображения аватара
+  var avatarDropZone = window.data.adForm.querySelector('.ad-form-header__drop-zone'); // зона, на которую осуществляется перетаскивание
   var avatarInitial = avatar.src; // адрес аватарки по умолчанию
 
-  var photoChooser = window.utils.adForm.querySelector('#images'); // поле загрузки фото
-  var photo = window.utils.adForm.querySelector('.ad-form__photo'); // блок в котором отображается фото
-  var photoDropZone = window.utils.adForm.querySelector('.ad-form__drop-zone'); // зона, на которую осуществляется перетаскивание
-  var photoContainer = window.utils.adForm.querySelector('.ad-form__photo-container'); // контейнер с фотографиями
+  var photoChooser = window.data.adForm.querySelector('#images'); // поле загрузки фото
+  var photo = window.data.adForm.querySelector('.ad-form__photo'); // блок в котором отображается фото
+  var photoDropZone = window.data.adForm.querySelector('.ad-form__drop-zone'); // зона, на которую осуществляется перетаскивание
+  var photoContainer = window.data.adForm.querySelector('.ad-form__photo-container'); // контейнер с фотографиями
 
   var isAttachedFiles; // флаг, показывающий, что были добавлены фотографии
 
@@ -88,9 +88,6 @@
   * @return {Array}
   */
   var renderMultipleFiles = function (fileList) {
-    // удаляем превью, если они уже были отрисованы
-    clearPhoto();
-
     var correctFiles = []; // массив для хранения только файлов изображений
     var fragment = document.createDocumentFragment();
     var image;
@@ -190,6 +187,7 @@
   // добавление фотографий жилья
   // через окно диалога выбора файла
   photoChooser.addEventListener('change', function () {
+    clearPhoto(); // удаляем превью, если они уже были отрисованы
     renderMultipleFiles(photoChooser.files);
   });
 
@@ -215,6 +213,7 @@
     unhighlight(photoDropZone);
 
     // запускаем отрисовку
+    clearPhoto(); // удаляем превью, если они уже были отрисованы
     window.attachment.photoFile = renderMultipleFiles(evt.dataTransfer.files);
   });
 

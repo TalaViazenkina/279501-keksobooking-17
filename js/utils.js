@@ -5,12 +5,12 @@
   * @const
   * @type {number}
   */
-  var ESC_KEYCODE = 27;
+  var Keycode = {
+    ENTER: 13,
+    ESC: 27
+  };
 
   window.utils = {
-
-    adForm: document.querySelector('.ad-form'), // форма добавления объявлений
-
     /**
     * генерирует случайный элемент массива
     * @param {array} arr
@@ -62,12 +62,19 @@
     /**
     * проверяет, был ли нажат esc
     * @param {event} evt
-    * @param {function} action
+    * @return {Boolean}
     */
-    isEscEvent: function (evt, action) {
-      if (evt.keyCode === ESC_KEYCODE) {
-        action();
-      }
+    isEscEvent: function (evt) {
+      return evt.keyCode === Keycode.ESC;
+    },
+
+    /**
+    * проверяет, был ли нажат enter
+    * @param {event} evt
+    * @return {Boolean}
+    */
+    isEnterEvent: function (evt) {
+      return evt.keyCode === Keycode.ENTER;
     }
   };
 })();
