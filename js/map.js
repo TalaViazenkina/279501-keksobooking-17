@@ -32,8 +32,9 @@
   var mapFiltersSelectArray = Array.prototype.slice.call(window.filters.form.querySelectorAll('.map__filter')); // все селекты в форме фильтрации
   var mapFiltersFieldset = window.filters.form.querySelector('.map__features'); // филдсет в форме фильтрации
 
-  var moveCount = 0; // флаг/счетчик передвижения мыши
-  var isFilterDisabled; // флаг заблокированной формы фильтровж
+
+  var isFilterDisabled; // флаг заблокированной формы фильтров
+  var isPageBlocked; // флаг заблокированной страницы
 
   /**
   * заполняет поле изначальными координатами метки
@@ -98,23 +99,27 @@
     // передадим изначальные координаты метки в поле адреса
     enterCoordinateInitial();
 
-    moveCount = 0; // обнуляем счетчик передвижения мыши
+    isPageBlocked = true; // меняем флаг
   };
 
   /**
   * активирует страницу
   */
   var activatePage = function () {
-    window.data.map.classList.remove('map--faded');
-    window.data.adForm.classList.remove('ad-form--disabled');
+    if (isPageBlocked) {
+      window.data.map.classList.remove('map--faded');
+      window.data.adForm.classList.remove('ad-form--disabled');
 
-    // удаляем со всех элементов управления формой атрибут disabled
-    adFormFieldsetArray.forEach(function (it) {
-      window.utils.removeDisabled(it);
-    });
+      // удаляем со всех элементов управления формой атрибут disabled
+      adFormFieldsetArray.forEach(function (it) {
+        window.utils.removeDisabled(it);
+      });
 
-    // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
-    window.form.getPrice(window.data.typePriceMap);
+      // зададим правильное значение минимальной цены для выбранного по умолчанию типа жилья
+      window.form.getPrice(window.data.typePriceMap);
+
+      isPageBlocked = false; // меняем флаг
+    }
   };
 
   var onLoadSuccess = function (response) {
@@ -145,11 +150,7 @@
   // перемещение главной метки
   window.data.mainPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-    moveCount += 1;
-
-    if (moveCount === 1) {
-      activatePage();
-    }
+    activatePage(); // активируем страницу
 
     var dragged = false; // флаг, который будет показывать было ли перемещение мыши
 
@@ -205,6 +206,14 @@
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
 
+  });
+
+  // активация страницы по enter
+  window.data.mainPin.addEventListener('keydown', function (evt) {
+    if (window.utils.isEnterEvent(evt)) {
+      activatePage();
+      window.backend.load(onLoadSuccess, window.error);
+    }
   });
 
   window.map = {

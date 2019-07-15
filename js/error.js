@@ -35,7 +35,7 @@
   */
   var onErrorEscPress = function (evt) {
     evt.preventDefault();
-    if (window.utils.isEscEvent) {
+    if (window.utils.isEscEvent(evt)) {
       closeError();
     }
   };
