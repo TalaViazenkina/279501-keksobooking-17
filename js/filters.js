@@ -130,6 +130,24 @@
     return (!input.checked) || (it.offer.features.indexOf(input.value) !== -1);
   };
 
+  /**
+  * суммарный фильтр
+  * @param {Object} it
+  * @return {boolean}
+  */
+  var checkTotal = function (it) {
+    return checkTypeValue(it) &&
+            checkPriceValue(it) &&
+            checkRoomValue(it) &&
+            checkGuestValue(it) &&
+            checkFeatures(wifi, it) &&
+            checkFeatures(dishwasher, it) &&
+            checkFeatures(parking, it) &&
+            checkFeatures(washer, it) &&
+            checkFeatures(elevator, it) &&
+            checkFeatures(conditioner, it);
+  };
+
 
   // добавим обработчик события change на всю форму,
   // а выбранный фильтр будем отслеживать по evt.target
@@ -144,16 +162,7 @@
 
     // отфильтруем данные
     filteredData = window.data.adsList.filter(function (ad) {
-      return checkTypeValue(ad) &&
-            checkPriceValue(ad) &&
-            checkRoomValue(ad) &&
-            checkGuestValue(ad) &&
-            checkFeatures(wifi, ad) &&
-            checkFeatures(dishwasher, ad) &&
-            checkFeatures(parking, ad) &&
-            checkFeatures(washer, ad) &&
-            checkFeatures(elevator, ad) &&
-            checkFeatures(conditioner, ad);
+      return checkTotal(ad);
     });
 
     // запустим отрисовку отфильтрованных меток
