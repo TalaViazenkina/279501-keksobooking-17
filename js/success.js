@@ -58,10 +58,12 @@
     window.data.adForm.reset(); // сброс формы
     window.attachment.clearAvatar(); // обнуление аватарки
     window.attachment.clearPhoto(); // удаление превью добавленных фотографий
+
     window.pin.clear(); // удаление меток
     window.card.remove(); // удаление карточки объявления
-    window.map.enterCoordinateInitial(); // ввод координат, соответствующих изначальному положению метки
+    window.filters.form.reset(); // сброс фильтров
 
+    window.map.enterCoordinateInitial(); // ввод координат, соответствующих изначальному положению метки
     window.data.movePinToInitial(); // передвигаем метку в центр
   };
 
