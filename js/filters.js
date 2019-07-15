@@ -3,7 +3,7 @@
 // модуль фильтрации объявлений
 (function () {
   window.filters = {
-    form: window.data.MAP.querySelector('.map__filters') // форма с фильтрами
+    form: window.data.map.querySelector('.map__filters') // форма с фильтрами
   };
 
   var selectType = window.filters.form.querySelector('select[name=housing-type]'); // фильтр типа жилья

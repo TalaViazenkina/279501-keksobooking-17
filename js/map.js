@@ -3,7 +3,7 @@
 // модуль, отвечающий за активацию страницы при перетаскивании пина
 (function () {
 
-  // максимальная ширина карты (из CSS)ж
+  // максимальная ширина карты (из CSS);
   var MAP_MAX_WIDTH = 1200;
 
   /**
@@ -21,7 +21,7 @@
   */
   var locationX = {
     MIN: 0,
-    max: window.data.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH
+    max: window.data.map.offsetWidth - window.data.MAIN_PIN_WIDTH
   };
 
   // форма подачи объявления
@@ -45,8 +45,8 @@
   * перерасчитывает максимальную координату x метки при изменении ширины окна браузера
   */
   var updateCoordinate = function () {
-    if (window.data.MAP.offsetWidth < MAP_MAX_WIDTH) {
-      locationX.max = window.data.MAP.offsetWidth - window.data.MAIN_PIN_WIDTH;
+    if (window.data.map.offsetWidth < MAP_MAX_WIDTH) {
+      locationX.max = window.data.map.offsetWidth - window.data.MAIN_PIN_WIDTH;
     }
 
   };
@@ -103,7 +103,7 @@
   * активирует страницу
   */
   var activatePage = function () {
-    window.data.MAP.classList.remove('map--faded');
+    window.data.map.classList.remove('map--faded');
     window.data.adForm.classList.remove('ad-form--disabled');
 
     // удаляем со всех элементов управления формой атрибут disabled

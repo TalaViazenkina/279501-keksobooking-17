@@ -151,8 +151,8 @@
   var closePopap = function () {
     card.remove();
     document.removeEventListener('keydown', onPopapEscPress);
-    if (window.data.MAP.querySelector('.map__pin--active')) {
-      window.data.MAP.querySelector('.map__pin--active').classList.remove('map__pin--active');
+    if (window.data.map.querySelector('.map__pin--active')) {
+      window.data.map.querySelector('.map__pin--active').classList.remove('map__pin--active');
     }
   };
 
@@ -232,7 +232,7 @@
 
 
     // добавляем отрисованную карточку в разметку
-    window.data.MAP.insertBefore(card, window.data.MAP.querySelector('.map__filters-container'));
+    window.data.map.insertBefore(card, window.data.map.querySelector('.map__filters-container'));
   };
 
   window.card = {
