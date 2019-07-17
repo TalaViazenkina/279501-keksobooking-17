@@ -106,8 +106,8 @@
     window.card.remove(); // удаление карточки объявления
     window.filters.form.reset(); // сброс фильтров
 
-    window.map.enterCoordinateInitial(); // ввод координат, соответствующих изначальному положению метки
     window.data.movePinToInitial(); // передвигаем метку в центр
+    window.map.desactivatePage(); // переводим страницу в неактивное состояние
   });
 
 })();

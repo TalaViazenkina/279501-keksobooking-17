@@ -83,6 +83,15 @@
   * переводит страницу в неактивное состояние
   */
   var desactivatePage = function () {
+    // если блок с картой не содержит класс map--faded, то добавляем его
+    if (!window.data.map.classList.contains('map--faded')) {
+      window.data.map.classList.add('map--faded');
+    }
+    // если форма добавления объявления не содержит класс ad-form--disabled, то добавляем его
+    if (!window.data.adForm.classList.contains('ad-form--disabled')) {
+      window.data.adForm.classList.add('ad-form--disabled');
+    }
+
     // заблокируем фильтры
     window.utils.addDisabled(mapFiltersFieldset);
 
@@ -217,7 +226,7 @@
   });
 
   window.map = {
-    enterCoordinateInitial: enterCoordinateInitial
+    desactivatePage: desactivatePage
   };
 
 })();
